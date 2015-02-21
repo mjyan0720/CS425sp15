@@ -3,10 +3,13 @@ import java.util.*;
 import java.net.*;
 
 public class Packet{
+    //information provide when packet is created
 	private String content;
-	private PacketType type;
-    private long time;//unit seconds
-    private long delay;//unit seconds
+	private long time;//unit milliseconds
+    private long delay;//unit milliseconds
+
+    //pasred result of packets
+    private PacketType type;
     private int destination;
     private String message;
     public enum PacketType {
@@ -20,10 +23,9 @@ public class Packet{
 
 
     //initialize Packet with its content, creation time and delay
-    public Packet(String s, long t, long d){
+    public Packet(String s, long t){
         this.content = s;
         this.time = t;
-        this.delay = d;
         parsePacket();
     }
 
@@ -47,5 +49,27 @@ public class Packet{
         System.out.println("Invalid Command");
         this.type = PacketType.Invalid;
 
+    }
+
+    public PacketType getType(){
+        return type;
+    }
+
+    //the send time is in milliseconds
+    //use it to compare with System.currentTimeMillis()
+    public long getSendTime(){
+        return time+delay;
+    }
+
+    public int getDestination(){
+        return destination;
+    }
+
+    public String getMessage(){
+        return message;
+    }
+
+    public void setDelay(long d){
+        this.delay = d;
     }
 }
