@@ -1,18 +1,19 @@
+
 import java.io.*;
 import java.util.*;                                              
 import java.net.*;
 
-public class Packet{
+public class Packet implements Serializable{
     //information provide when packet is created
 	private String content;
 	private long time;//unit milliseconds
     private long delay;//unit milliseconds
 
     //pasred result of packets
-    private PacketType type;
-    private int destination;
-    private String message;
-    public enum PacketType {
+    private PacketType type = PacketType.Invalid;
+    private int destination = 0;
+    private String message = null;
+    public static enum PacketType {
         Invalid,
         Message,
         Show,
