@@ -7,6 +7,16 @@ public class DataCenter{
 	private static Socket socket_map[] = new Socket[4]; 
 	private static int ports[] = new int[4];
 	private static String host_name = new String("127.0.0.1");
+	private static int index;
+	private static int delay[][] = new int[4][4]; 
+
+	public static int getId(){
+		return index;
+	}
+
+	public static int getMaxDelay(int src, int des){
+		return delay[src][des];
+	}
 
 	public static synchronized Packet getMessage(){
 	// Return one message if the message queue is not empty
