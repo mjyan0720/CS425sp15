@@ -19,7 +19,8 @@ public class DataCenter{
 	}
 
 	public static int getMaxDelay(int src, int des){
-		return delay[src][des];
+		return 3;
+//		return delay[src][des];
 	}
 
 	public static synchronized Packet getMessage(){
@@ -42,23 +43,27 @@ public class DataCenter{
 	public static void buildConnection() throws IOException{
 		for(int i=0; i < 4; i++){
 		// Build socket with machines which have bigger IDs than current machine
-			if(i > index){
+			if(i < index){
 				try{
 					Socket client_socket = new Socket(host_name,ports[i]);
 					socket_map[i] = client_socket;
 					System.out.println("Connection successful between " + i + " and " + index);
 				} catch (IOException e){
-					System.out.println("Cannot open socket between " + i + " and " + index);
+					System.out.println("1 Cannot open socket between " + i + " and " + index + " Port is" + ports[i]);
 					e.printStackTrace(System.out);
 				}
 			}
-			else{
+			else if(i == index){
 				try{
 					ServerSocket server_socket = new ServerSocket(ports[i]);
-					Socket client_socket = server_socket.accept();
-					socket_map[i] = client_socket;
+					i++;
+					while(i < 4){
+						Socket client_socket = server_socket.accept();
+						socket_map[i] = client_socket;
+						i++;
+					}
 				} catch (IOException e){
-					System.out.println("Cannot open socket between " + i + " and " + index);
+					System.out.println("2 Cannot open socket between " + i + " and " + index + " Port is" + ports[i]);
 					e.printStackTrace(System.out);
 				}
 			}
@@ -87,10 +92,10 @@ public class DataCenter{
 	}
 		
 	public static void initialize(){
-		ports[0] = 28001;
-		ports[1] = 28002;
-		ports[2] = 28003;
-		ports[3] = 28004;
+		ports[0] = 38001;
+		ports[1] = 38002;
+		ports[2] = 38003;
+		ports[3] = 38004;
 	}
 
 	public static void main(String[] args) throws IOException {
