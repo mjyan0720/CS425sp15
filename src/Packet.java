@@ -11,7 +11,7 @@ public class Packet implements Serializable{
 
     //pasred result of packets
     private PacketType type = PacketType.Invalid;
-    private int destination = 0;
+    private int destination = -1;
     private String message = null;
     public static enum PacketType {
         Invalid,
@@ -36,13 +36,17 @@ public class Packet implements Serializable{
         //check whether it's a send message packet or not
         if(content.length()>4){
             String cmd = content.substring(0, 4);
-            if(cmd == new String("Send") ){
+            if(cmd.equals(new String("Send") )){
+                //expected format:
+                //Send xxxx to A
+                //4, ,?, 2, ,1
                 this.type = PacketType.Message;
                 this.destination = content.charAt(content.length()-1) - 'A';
-                if(this.destination < 4 & this.destination >= 0){
-                    System.out.println("Invalid Destination");
+                //check whether the desitnation is within the range
+                if(this.destination >= DataCenter.TOTAL_NUM ||  this.destination < 0){
+                    System.out.println("Invalid Destination!!");
                 }
-                this.message = content.substring(5, content.length()-2);
+                this.message = content.substring(5, content.length()-5);
                 return;
             }
         }

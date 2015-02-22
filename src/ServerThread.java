@@ -7,31 +7,37 @@ import java.text.*;
 public class ServerThread implements Runnable{
 
     private Socket socket; 
+    private int target;
     private DataCenter data_center;
 
-    public ServerThread(DataCenter data_center, Socket socket){
+    public ServerThread(DataCenter data_center, int target){
+        this.target = target;
         this.data_center = data_center;
-        this.socket = socket;
+        this.socket = data_center.getSocket(target);
     }
 
     public void run(){
 
-        while(true){
-            try{
-                ObjectInputStream obj_is = new ObjectInputStream(socket.getInputStream());
+        System.out.println("Starting Server Thread listen to message from "+(char)(target+'A'));
+        try{
+            ObjectInputStream obj_is = new ObjectInputStream(socket.getInputStream());
+ 
+            while(true){
+                //blocking to read from the socket
                 Packet recv_packet = (Packet)obj_is.readObject();
                 if(recv_packet!=null){
                     processPacket(recv_packet);
                 }
-            } catch(IOException e){
-                System.err.println(e);
-                System.exit(1);
-            } catch(ClassNotFoundException e){
-                System.err.println(e);
-                System.exit(1);
-           }
-        }//end of inifinite loop
-   
+            }//end of infinite loop
+
+        }catch(IOException e){
+            System.err.println(e);
+            System.exit(1);
+        } catch(ClassNotFoundException e){
+            System.err.println(e);
+            System.exit(1);
+        }// end of catch class not found exception
+          
     }
 
     private void processPacket(Packet packet){
@@ -40,7 +46,7 @@ public class ServerThread implements Runnable{
                 DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
                 Date dateobj = new Date();
                 System.out.println("Received \""+packet.getMessage()
-                        +"\" from "+(packet.getDestination()+'A')
+                        +"\" from "+(char)(target+'A')
                         +", Max delay is "+data_center.getMaxDelay(
                             data_center.getId(), packet.getDestination())
                         +" s, system time is "+df.format(dateobj));

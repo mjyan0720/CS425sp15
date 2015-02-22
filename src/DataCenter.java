@@ -2,46 +2,59 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;                                              
+import java.util.concurrent.*;
+
 
 public class DataCenter{
-	private static Queue<Packet> message_queue;
-	private static Socket socket_map[] = new Socket[4]; 
-	private static int ports[] = new int[4];
-	private static String host_name = new String("127.0.0.1");
-	private static int index;
-	private static int delay[][] = new int[4][4]; 
+	
+    public static final int TOTAL_NUM = 3;
+    public static final int base_port = 6000;
 
-	public DataCenter(){
+    private  Queue<Packet> message_queue = new LinkedBlockingQueue<Packet>();
+	private  Socket socket_map[] = new Socket[TOTAL_NUM]; 
+	private  int ports[] = new int[TOTAL_NUM];
+	private  String host_name = new String("127.0.0.1");
+	private  int index;
+	private  int delay[][] = new int[TOTAL_NUM][TOTAL_NUM]; 
+
+	public DataCenter(int index){
+        this.index = index;
 	}
 
-	public static int getId(){
+	public  int getId(){
 		return index;
 	}
 
-	public static int getMaxDelay(int src, int des){
+	public  int getMaxDelay(int src, int des){
 		return 3;
 //		return delay[src][des];
 	}
 
-	public static synchronized Packet getMessage(){
+	public  synchronized Packet getMessage(){
 	// Return one message if the message queue is not empty
-		return message_queue.poll();
+    		return message_queue.poll();
 	}
 
-	public static synchronized void insertMessage(Packet p){
+	public  synchronized void insertMessage(Packet p){
 	// Return one message if the message queue is not empty
 		message_queue.add(p);
 	}
 
 	//@Parameter: machine ID
-	public static Socket getSocket(int id){
+	public  Socket getSocket(int id){
 	// Return one message if the message queue is not empty
 		return socket_map[id];
 	}
 
 	//@Parameter: current machine ID
-	public static void buildConnection() throws IOException{
-		for(int i=0; i < 4; i++){
+	public  void buildConnection() throws IOException{
+
+        //for debug, print out port information
+        for(int i=0; i< TOTAL_NUM; i++){
+            System.out.println(i + " -> " + ports[i]);
+        }
+
+		for(int i=0; i < TOTAL_NUM; i++){
 		// Build socket with machines which have bigger IDs than current machine
 			if(i < index){
 				try{
@@ -49,7 +62,8 @@ public class DataCenter{
 					socket_map[i] = client_socket;
 					System.out.println("Connection successful between " + i + " and " + index);
 				} catch (IOException e){
-					System.out.println("1 Cannot open socket between " + i + " and " + index + " Port is" + ports[i]);
+					System.out.println("1 Cannot open socket between " + i + " and " + index
+                            + "; Port is " + ports[i]);
 					e.printStackTrace(System.out);
 				}
 			}
@@ -57,20 +71,22 @@ public class DataCenter{
 				try{
 					ServerSocket server_socket = new ServerSocket(ports[i]);
 					i++;
-					while(i < 4){
+					while(i < TOTAL_NUM){
 						Socket client_socket = server_socket.accept();
 						socket_map[i] = client_socket;
-						i++;
-					}
+						System.out.println("Get connection from " + i + ". Connect succeed.");
+	    				i++;
+		        }
 				} catch (IOException e){
-					System.out.println("2 Cannot open socket between " + i + " and " + index + " Port is" + ports[i]);
+					System.out.println("2 Cannot open socket between " + i + " and " + index
+                            + "; Port is " + ports[i]);
 					e.printStackTrace(System.out);
 				}
 			}
 		}
 	}
 
-	public static void readConfigFile(String file) throws Exception{
+	public  void readConfigFile(String file) throws Exception{
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		try{
 			StringBuilder sb = new StringBuilder();
@@ -91,20 +107,36 @@ public class DataCenter{
 		}
 	}
 		
-	public static void initialize(){
-		ports[0] = 38001;
-		ports[1] = 38002;
-		ports[2] = 38003;
-		ports[3] = 38004;
+	public void initialize(){
+        for(int i=0; i<TOTAL_NUM; i++){
+		    ports[i] = base_port + i;
+        }
 	}
+
+    void startThreads(){
+        Thread client_thread = new Thread(new ClientThread(this));
+        Thread server_threads[] = new Thread[TOTAL_NUM];
+        for(int i=0; i<TOTAL_NUM; i++){
+            if(i!=getId()){
+                server_threads[i] = new Thread(new ServerThread(this, i));
+                server_threads[i].start();
+            }
+        }
+        Thread message_thread = new Thread(new MessageThread(this));
+        message_thread.start();
+        client_thread.start();
+   }
 
 	public static void main(String[] args) throws IOException {
     	if (args.length < 1) {
         	System.err.println("Usage: java DataCenter machineID(0,1,2,3)");
 	        System.exit(1);
     	}
-		index = Integer.parseInt(args[0]);
-		initialize();
-		buildConnection();
-	}
+		int index = Integer.parseInt(args[0]);
+        DataCenter datacenter = new DataCenter(index);
+		datacenter.initialize();
+		datacenter.buildConnection();
+
+        datacenter.startThreads();
+    }
 }

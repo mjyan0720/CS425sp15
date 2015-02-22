@@ -8,11 +8,30 @@ public class MessageThread implements Runnable{
 
     private DataCenter data_center;
 
+    private ObjectOutputStream obj_os[] = new ObjectOutputStream[DataCenter.TOTAL_NUM];
     public MessageThread(DataCenter data_center){
         this.data_center = data_center;
     }
 
+    private void initializeOutput() throws IOException{
+        for(int i=0; i<DataCenter.TOTAL_NUM; i++){
+            if(i!=data_center.getId()){
+                OutputStream os = data_center.getSocket(i).getOutputStream();
+                obj_os[i] = new ObjectOutputStream(os);
+            }
+        }
+    }
+
     public void run(){
+        
+        System.out.println("Starting Message Thread...");
+
+        try{
+            initializeOutput();
+        } catch(IOException e){
+            System.err.println("error occur when initialize all object output stream");
+            System.err.println(e);
+        }
 
         while( true){
 
@@ -23,8 +42,8 @@ public class MessageThread implements Runnable{
                 long current_time = System.currentTimeMillis();
                 long send_time = packet.getSendTime();
 
-                printPacket(packet);
-
+                //check whether it's the time to send the message
+                //if not, sleep for required length of time
                 if(send_time > current_time){
                     try{
                         Thread.sleep(send_time - current_time);
@@ -34,6 +53,7 @@ public class MessageThread implements Runnable{
                     }
                 }
 
+                //send the message
                 try{
                     sendPacket(packet);
                 } catch(IOException e){
@@ -48,29 +68,21 @@ public class MessageThread implements Runnable{
 
     private void sendPacket(Packet packet) throws IOException
     {
-
-        OutputStream os = data_center.getSocket(packet.getDestination()).getOutputStream();
-        ObjectOutputStream obj_os = new ObjectOutputStream(os);
-        obj_os.writeObject(packet);
-        obj_os.close();
-        os.close();
-
-    }
-
-
-    private void printPacket(Packet packet){
-        DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-        Date dateobj = new Date();
-
-        switch(packet.getType()){
-            case Message:
-                System.out.println("Sent \""+packet.getMessage()
-                        +"\" to "+(packet.getDestination()+'A')
-                        +", system time is "+df.format(dateobj));
-                break;
-            default:
-                System.out.println("Can't recognize the packet.");
+        if(packet.getDestination()<0 || packet.getDestination() >= DataCenter.TOTAL_NUM){
+            System.out.println("A packet with invalid desitination "+packet.getDestination()+", drop it!");
+            return;
         }
+        if(packet.getDestination()==data_center.getId()){
+            System.out.println("Send packet to myself. This case is not handled yet. Drop packet.");
+            return;
+        }
+        //if the destination is valid, just send it
+        //TODO: haven't deal with the case send to the server itself
+        //that port havn't been initialized
+        obj_os[packet.getDestination()].writeObject(packet);
+
     }
+
+
 
 }
