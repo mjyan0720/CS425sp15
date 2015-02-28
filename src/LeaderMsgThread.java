@@ -70,6 +70,8 @@ public class LeaderMsgThread implements Runnable{
             case Update:
                 for(int i=0; i<DataCenter.TOTAL_NUM; i++){
                     packet.setDestination(i);
+                    System.out.println("Sent packet \""+packet.getContent()+"\" to "
+                            +(char)(i+'A'));
                     obj_os[i].writeObject(packet);
                 }
                 break;

@@ -37,7 +37,11 @@ public class ClientThread implements Runnable{
                 //use information of the packet to determine destination
                 //and corresponding delay
                 Random random = new Random();
-                long delay = random.nextInt(data_center.getMaxDelay(data_center.getId(),
+                long delay;
+                if(packet.getModel() ==1)
+                     delay = random.nextInt(data_center.getMaxDelay()*1000);
+               else
+                    delay = random.nextInt(data_center.getMaxDelay(data_center.getId(),
                             packet.getDestination())*1000);
                 packet.setDelay(delay);
                 //used for debug
@@ -62,6 +66,11 @@ public class ClientThread implements Runnable{
                 System.out.println("Sent \""+packet.getMessage()
                         +"\" to "+(char)(packet.getDestination()+'A')
                         +", system time is "+df.format(dateobj));
+                break;
+            case Insert:
+                if(packet.getModel()==1)
+                    System.out.println("Sent \""+packet.getContent()
+                        +"\" to Leader, system time is "+df.format(dateobj));
                 break;
             default:
                 System.out.println("Can't recognize the packet.");
