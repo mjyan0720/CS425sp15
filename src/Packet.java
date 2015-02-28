@@ -19,7 +19,9 @@ public class Packet implements Serializable{
         Show,
         Search,
         Insert,
-        Update
+        Update,
+        Delete,
+
     };
 
 
