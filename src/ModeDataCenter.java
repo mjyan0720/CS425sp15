@@ -59,9 +59,9 @@ public class ModeDataCenter extends KeyValueDataCenter{
     }
 
 
-	@Override
-	public void readConfigFile(String file){
-	}
+//	@Override
+//	public void readConfigFile(String file){
+//	}
 
 	@Override
 	public void startThreads(){
