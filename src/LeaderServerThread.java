@@ -40,7 +40,7 @@ public class LeaderServerThread extends ServerThread {
                         +", Max delay is "+data_center.getMaxDelay()
                         +" s, system time is "+df.format(dateobj));
                 LeaderDataCenter leader_data_center = (LeaderDataCenter)data_center;
-                leader_data_center.insertAckPacket(packet);
+                leader_data_center.setAckPacket(packet);
                 break;
             default:
                 System.out.println("Can't recognize the packet.");

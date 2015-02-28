@@ -35,18 +35,7 @@ public class LeaderMsgThread implements Runnable{
         while( true){
 
             //get the top packet of the queue
-            Packet ack_packet = data_center.getAckPacket();
             Packet packet = data_center.getMessage();
-
-            if( ack_packet != null){
-                //send the message
-                try{
-                    sendPacket(packet);
-                } catch(IOException e){
-                    System.err.println("error in send packet.");
-                    System.err.println(e);
-                }
-            }
 
             if( packet != null ){
 
@@ -57,6 +46,17 @@ public class LeaderMsgThread implements Runnable{
                     System.err.println("error in send packet.");
                     System.err.println(e);
                 }
+
+                //loop waiting for receive all ack packets
+                while(data_center.getAckPacket()==null) ;
+
+                try{
+                    sendPacket(data_center.getAckPacket());
+                    data_center.resetAckPacket();
+                } catch(IOException e){
+                    System.err.println("error in send packet.");
+                    System.err.println(e);
+               }
             }
 
         }//end of infinite loop
@@ -73,7 +73,7 @@ public class LeaderMsgThread implements Runnable{
                 }
                 break;
             case Ack:
-                obj_os[packet.getSource()].writeObject(packet);
+                obj_os[packet.getDestination()].writeObject(packet);
                 break;
             default:
                 System.out.println("Can't recognize packet.");

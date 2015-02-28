@@ -8,16 +8,16 @@ import java.util.concurrent.*;
 public abstract class KeyValueDataCenter extends DataCenter{
 
     public class Content{
-        public double value;
+        public int value;
         public double timestamp;
-		public Content(double v, double t){
+		public Content(double v, int t){
 			value = v;
 			timestamp = t;
 		}
 
     }
 
-    private Map<String, Content> key_value_map = new HashMap<String, Content>();
+    private Map<Integer, Content> key_value_map = new HashMap<String, Content>();
 
 
     public KeyValueDataCenter(int index){

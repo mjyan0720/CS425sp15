@@ -8,16 +8,42 @@ public class LeaderDataCenter extends DataCenter{
 
     public static final int LEADER_PORT = 9876;
 
-    protected Queue<Packet> ack_queue = new LinkedBlockingQueue<Packet>();
+    protected Packet ack_packet;
+    protected int ack_received = 0;
+    protected Object lock = new Object();
 
     LeaderDataCenter(){ super(0); }
 
-    public synchronized void insertAckPacket(Packet packet){
-        ack_queue.add(packet);
+    public synchronized void setAckPacket(Packet packet){
+        synchronized(lock){
+
+            if(ack_received==0)
+                ack_packet = packet;
+            else{
+                //check whether it's the ack packet we expect
+                if(ack_packet.getDestination()!=packet.getDestination()){
+                    System.out.println("Error. Receive unexpected ack packets. Ignore it.");
+                }
+            }
+            ack_received += 1;
+        }
     }
 
     public synchronized Packet getAckPacket(){
-        return ack_queue.poll();
+        if(ack_received < DataCenter.TOTAL_NUM)
+            //if haven't receive all ack packets
+            //doesn't take action
+            return null;
+        else
+            return ack_packet;
+    }
+
+    public synchronized void resetAckPacket(){
+        synchronized(lock){
+            ack_received = 0;
+            ack_packet = null;
+        }
+
     }
 
     @Override
