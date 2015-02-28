@@ -10,14 +10,14 @@ public abstract class KeyValueDataCenter extends DataCenter{
     public class Content{
         public int value;
         public double timestamp;
-		public Content(double v, int t){
+		public Content(int v, double t){
 			value = v;
 			timestamp = t;
 		}
 
     }
 
-    private Map<Integer, Content> key_value_map = new HashMap<String, Content>();
+    private Map<Integer, Content> key_value_map = new HashMap<Integer, Content>();
 
 
     public KeyValueDataCenter(int index){
@@ -34,21 +34,33 @@ public abstract class KeyValueDataCenter extends DataCenter{
     // -- getMap() // return the whole map, in search all
 
 
-	protected Content getValue(String key){
+	protected Content getValue(int key){
 		return key_value_map.get(key);
 	}
 
-	protected void insertPair(String key, double value, double time){
+	protected void insertPair(int key, int value, double time){
 		key_value_map.put(key, new Content(value, time));
 	}
 
-	protected void updatePair(String key, double value, double time){
+    protected void insertPair(int key, Content content){
+		key_value_map.put(key, content);
+	}
+
+	protected void updatePair(int key, int value, double time){
 		key_value_map.put(key, new Content(value, time));
 	}
 
-	protected void deleteKey(String key){
+    protected void updatePair(int key, Content content){
+		key_value_map.put(key, content);
+	}
+
+	protected void deleteKey(int key){
 		key_value_map.remove(key);
 	}
+
+    protected boolean containsKey(int key){
+        return (key_value_map.get(key)!=null);
+    }
 
 }
 
