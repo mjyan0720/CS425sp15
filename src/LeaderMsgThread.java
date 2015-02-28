@@ -69,6 +69,7 @@ public class LeaderMsgThread implements Runnable{
             case Insert:
             case Update:
                 for(int i=0; i<DataCenter.TOTAL_NUM; i++){
+                    packet.setDestination(i);
                     obj_os[i].writeObject(packet);
                 }
                 break;

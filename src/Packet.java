@@ -126,6 +126,10 @@ public class Packet implements Serializable{
         return source;
     }
 
+    public void setDestination(int dest){
+        this.destination = dest;
+    }
+
     public int getDestination(){
         return destination;
     }
