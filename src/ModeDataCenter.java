@@ -29,7 +29,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
     }
 
 	public synchronized boolean messageComplete(){
-		if(ack >= ack_num){
+		if(ack > 0){
 			ack = 0;
 			return true;
 		}
@@ -41,7 +41,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	}
 
 	public String show(){
-		return "";
+		return new String("Show value successful!");
 	}
 
 	public synchronized boolean search(int key){

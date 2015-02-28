@@ -30,7 +30,7 @@ public class ModeMsgThread implements Runnable{
         }
         while(true){
             //get the top packet of the queue
-//			while(!data_center.messageComplete());
+			while(!data_center.messageComplete());
             Packet packet = data_center.getMessage();
             if( packet != null ){
                 long current_time = System.currentTimeMillis();
