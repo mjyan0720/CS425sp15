@@ -116,6 +116,10 @@ public class Packet implements Serializable{
         return content;
     }
 
+    public int getSource(){
+        return source;
+    }
+
     public int getDestination(){
         return destination;
     }

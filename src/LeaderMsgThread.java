@@ -35,22 +35,20 @@ public class LeaderMsgThread implements Runnable{
         while( true){
 
             //get the top packet of the queue
+            Packet ack_packet = data_center.getAckPacket();
             Packet packet = data_center.getMessage();
-            if( packet != null ){
 
-                long current_time = System.currentTimeMillis();
-                long send_time = packet.getSendTime();
-
-                //check whether it's the time to send the message
-                //if not, sleep for required length of time
-                if(send_time > current_time){
-                    try{
-                        Thread.sleep(send_time - current_time);
-                    } catch(InterruptedException e){
-                        System.err.println("In message thread, message delay is interrupted.");
-                        System.err.println(e);
-                    }
+            if( ack_packet != null){
+                //send the message
+                try{
+                    sendPacket(packet);
+                } catch(IOException e){
+                    System.err.println("error in send packet.");
+                    System.err.println(e);
                 }
+            }
+
+            if( packet != null ){
 
                 //send the message
                 try{
@@ -67,16 +65,19 @@ public class LeaderMsgThread implements Runnable{
 
     private void sendPacket(Packet packet) throws IOException
     {
-        if(packet.getDestination()<0 || packet.getDestination() >= DataCenter.TOTAL_NUM){
-            System.out.println("A packet with invalid desitination "+packet.getDestination()+", drop it!");
-            return;
+        switch(packet.getType()){
+            case Insert:
+            case Update:
+                for(int i=0; i<DataCenter.TOTAL_NUM; i++){
+                    obj_os[i].writeObject(packet);
+                }
+                break;
+            case Ack:
+                obj_os[packet.getSource()].writeObject(packet);
+                break;
+            default:
+                System.out.println("Can't recognize packet.");
         }
-/*        if(packet.getDestination()==data_center.getId()){
-            System.out.println("Send packet to myself. This case is not handled yet. Drop packet.");
-            return;
-        }
- */       //if the destination is valid, just send it
-        obj_os[packet.getDestination()].writeObject(packet);
 
     }
 
