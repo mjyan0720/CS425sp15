@@ -7,7 +7,7 @@ import java.util.concurrent.*;
 
 public class DataCenter{
 	
-    public static final int TOTAL_NUM = 4;
+    public static final int TOTAL_NUM = 2;
     public static final int base_port = 6000;
     public static final int MAX_DELAY = 3;
 
@@ -27,7 +27,10 @@ public class DataCenter{
 	}
 
 	public  int getMaxDelay(int src, int des){
-		return delay[src][des];
+        if(src>=TOTAL_NUM || des>=TOTAL_NUM)
+            return MAX_DELAY;
+        else
+    		return delay[src][des];
 	}
 
     public int getMaxDelay(){

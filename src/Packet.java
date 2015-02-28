@@ -109,6 +109,9 @@ public class Packet implements Serializable{
             this.type = PacketType.Get;
             this.key = Integer.parseInt(str[1]);
             return;
+        } else if(content.equals(new String("ACK"))){
+            this.type = PacketType.Ack;
+            return;
         }
 
         System.out.println("Invalid Command");

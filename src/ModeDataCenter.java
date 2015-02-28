@@ -52,11 +52,12 @@ public class ModeDataCenter extends KeyValueDataCenter{
 
 	public synchronized void insert(int key, int value, long time){
 		insertPair(key, value,time);
-	}
+		System.out.println("Successful inserting key " + key);
+    }
 
 	public synchronized void insert(int key, Content content){
 		insertPair(key, content);
-		System.out.println("Successful inserting key %d" + key);
+		System.out.println("Successful inserting key " + key);
 	}
 	
 	public synchronized void update(int key, int value, long time){
@@ -79,7 +80,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	public void startThreads(){
         Thread client_thread = new Thread(new ClientThread(this));
         Thread server_threads[] = new Thread[TOTAL_NUM];
-        for(int i=0; i<TOTAL_NUM; i++){
+/*        for(int i=0; i<TOTAL_NUM; i++){
             if(i!=getId()){
                 server_threads[i] = new Thread(new ModeServerThread(this, i));
             } else {
@@ -87,7 +88,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
             }
          server_threads[i].start();
         }
-        Thread server_thread_listen_to_leader = new Thread(new ModeServerThread(this, getLeaderSocket()));
+*/        Thread server_thread_listen_to_leader = new Thread(new ModeServerThread(this, getLeaderSocket()));
         server_thread_listen_to_leader.start();
         Thread message_thread = new Thread(new ModeMsgThread(this));
         message_thread.start();

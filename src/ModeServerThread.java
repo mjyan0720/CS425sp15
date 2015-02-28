@@ -50,7 +50,7 @@ public class ModeServerThread extends ServerThread{
         switch(packet.getType()){
 			case Insert:
 				replica.insert(key, value, time);
-				Packet p = buildAckMsg(des, source);
+				Packet p = buildAckMsg(source, DataCenter.TOTAL_NUM);
 				replica.insertMessage(p);
 				break;
 /*			case Show:
@@ -103,7 +103,7 @@ public class ModeServerThread extends ServerThread{
 
 	private Packet buildAckMsg(int source, int des){
 		long current_time = System.currentTimeMillis();
-		Packet p = new Packet("ACK",current_time, source, des);
+		Packet p = new Packet(new String("ACK"),current_time, source, des);
         Random random = new Random();
         long delay = random.nextInt(data_center.getMaxDelay(data_center.getId(),
                     p.getDestination())*1000);
