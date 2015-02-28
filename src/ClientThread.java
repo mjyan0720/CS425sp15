@@ -46,7 +46,7 @@ public class ClientThread implements Runnable{
     }
 
     private void printPacket(Packet packet){
-        DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+        DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");
         Date dateobj = new Date();
 
         switch(packet.getType()){
