@@ -16,6 +16,12 @@ public class ServerThread implements Runnable{
         this.socket = data_center.getSocket(target);
     }
 
+    public ServerThread(DataCenter data_center, Socket s){
+        this.data_center = data_center;
+        this.socket = s;
+        this.target = -1;
+    }
+
     public void run(){
 
         System.out.println("Starting Server Thread listen to message from "+(char)(target+'A'));

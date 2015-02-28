@@ -87,6 +87,8 @@ public class ModeDataCenter extends KeyValueDataCenter{
             }
          server_threads[i].start();
         }
+        Thread server_thread_listen_to_leader = new Thread(new ModeServerThread(this, getLeaderSocket()));
+        server_thread_listen_to_leader.start();
         Thread message_thread = new Thread(new ModeMsgThread(this));
         message_thread.start();
         client_thread.start();

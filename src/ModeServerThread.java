@@ -8,6 +8,10 @@ public class ModeServerThread extends ServerThread{
 		super(data_center, target);
 	}
 
+    public ModeServerThread(DataCenter data_center, Socket s){
+        super(data_center, s);
+    }
+
 	@Override
 	public void run(){
         System.out.println("Starting Server Thread listen to message from "+(char)(target+'A'));
