@@ -6,7 +6,7 @@ import java.text.*;
 
 public class MessageThread implements Runnable{
 
-    private DataCenter data_center;
+    protected DataCenter data_center;
 
     private ObjectOutputStream obj_os[] = new ObjectOutputStream[DataCenter.TOTAL_NUM];
     public MessageThread(DataCenter data_center){

@@ -148,7 +148,7 @@ public class DataCenter{
         DataCenter datacenter = new DataCenter(index);
 		int mode = Integer.parseInt(args[2]);
 		if(mode == 1){
-			datacenter = new LinearizableDataCenter(index);		
+			datacenter = new ModeDataCenter(index);		
 		}
 		else if(mode == 2){
 		}
