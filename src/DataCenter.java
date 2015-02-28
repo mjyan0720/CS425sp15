@@ -10,12 +10,12 @@ public class DataCenter{
     public static final int TOTAL_NUM = 4;
     public static final int base_port = 6000;
 
-    private  Queue<Packet> message_queue = new LinkedBlockingQueue<Packet>();
-	private  Socket socket_map[] = new Socket[TOTAL_NUM+1]; 
-	private  int ports[] = new int[TOTAL_NUM];
-	private  String host_name = new String();
-	private  int index;
-	private  int delay[][] = new int[TOTAL_NUM][TOTAL_NUM]; 
+    protected  Queue<Packet> message_queue = new LinkedBlockingQueue<Packet>();
+	protected  Socket socket_map[] = new Socket[TOTAL_NUM+1]; 
+	protected  int ports[] = new int[TOTAL_NUM];
+	protected  String host_name = new String();
+	protected  int index;
+	protected  int delay[][] = new int[TOTAL_NUM][TOTAL_NUM]; 
 
 	public DataCenter(int index){
         this.index = index;

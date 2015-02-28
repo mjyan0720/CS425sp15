@@ -12,7 +12,7 @@ public abstract class KeyValueDataCenter extends DataCenter{
         public double timestamp;
 		public Content(double v, double t){
 			value = v;
-			t = timestamp;
+			timestamp = t;
 		}
 
     }
@@ -35,19 +35,19 @@ public abstract class KeyValueDataCenter extends DataCenter{
 
 
 	protected Content getValue(String key){
-		return key_value_map[key];
+		return key_value_map.get(key);
 	}
 
 	protected void insertPair(String key, double value, double time){
-		key_value_map[key] = new Content(value, time);
+		key_value_map.put(key, new Content(value, time));
 	}
 
 	protected void updatePair(String key, double value, double time){
-		key_value_map[key] = new Content(value, time);
+		key_value_map.put(key, new Content(value, time));
 	}
 
 	protected void deleteKey(String key){
-		key_value_map[key].remove(key);
+		key_value_map.remove(key);
 	}
 
 }
