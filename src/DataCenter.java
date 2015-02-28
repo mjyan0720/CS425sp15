@@ -9,6 +9,7 @@ public class DataCenter{
 	
     public static final int TOTAL_NUM = 4;
     public static final int base_port = 6000;
+    public static final int MAX_DELAY = 3;
 
     protected  Queue<Packet> message_queue = new LinkedBlockingQueue<Packet>();
 	protected  Socket socket_map[] = new Socket[TOTAL_NUM+1]; 
@@ -28,6 +29,10 @@ public class DataCenter{
 	public  int getMaxDelay(int src, int des){
 		return delay[src][des];
 	}
+
+    public int getMaxDelay(){
+        return MAX_DELAY;
+    }
 
 	public  synchronized Packet getMessage(){
 	// Return one message if the message queue is not empty

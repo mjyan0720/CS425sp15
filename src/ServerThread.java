@@ -6,9 +6,9 @@ import java.text.*;
 
 public class ServerThread implements Runnable{
 
-    private Socket socket; 
-    private int target;
-    private DataCenter data_center;
+    protected Socket socket; 
+    protected int target;
+    protected DataCenter data_center;
 
     public ServerThread(DataCenter data_center, int target){
         this.target = target == DataCenter.TOTAL_NUM ? data_center.getId() : target;
@@ -40,7 +40,7 @@ public class ServerThread implements Runnable{
           
     }
 
-    private void processPacket(Packet packet){
+    protected void processPacket(Packet packet){
         switch(packet.getType()){
             case Message:
                 DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");

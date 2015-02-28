@@ -8,8 +8,30 @@ public class LeaderDataCenter extends DataCenter{
 
     public static final int LEADER_PORT = 9876;
 
+    protected Queue<Packet> ack_queue = new LinkedBlockingQueue<Packet>();
+
     LeaderDataCenter(){ super(0); }
-    
+
+    public synchronized void insertAckPacket(Packet packet){
+        ack_queue.add(packet);
+    }
+
+    public synchronized Packet getAckPacket(){
+        return ack_queue.poll();
+    }
+
+    @Override
+    public void startThreads(){
+        //Thread client_thread = new Thread(new ClientThread(this));
+        Thread server_threads[] = new Thread[TOTAL_NUM];
+        for(int i=0; i<TOTAL_NUM; i++){
+            server_threads[i] = new Thread(new ServerThread(this, i));
+            server_threads[i].start();
+        }
+        //Thread message_thread = new Thread(new MessageThread(this));
+        //message_thread.start();
+    }
+   
     @Override
     public void buildConnection() throws IOException{
  

@@ -25,7 +25,8 @@ public class ClientThread implements Runnable{
                 command = buffer_reader.readLine();
                 //System.out.println(command);
                 //create a new packet and parse it
-                Packet packet = new Packet(command, System.currentTimeMillis());
+                Packet packet = new Packet(command, System.currentTimeMillis(),
+                        data_center.getId());
                 //use information of the packet to determine destination
                 //and corresponding delay
                 Random random = new Random();
