@@ -73,12 +73,18 @@ public class Packet implements Serializable{
             this.key = Integer.parseInt(str[1]);
             this.value = Integer.parseInt(str[2]);
             this.model = Integer.parseInt(str[3]);
+            if(this.model == 1 || this.model == 2){
+                this.destination = DataCenter.TOTAL_NUM;
+            }
             return;
         } else if(str[0].equals(new String("update"))){
             this.type = PacketType.Update;
             this.key = Integer.parseInt(str[1]);
             this.value = Integer.parseInt(str[2]);
             this.model = Integer.parseInt(str[3]);
+            if(this.model == 1 || this.model == 2){
+                this.destination = DataCenter.TOTAL_NUM;
+            }
             return;
         } else if(str[0].equals(new String("delete"))){
             this.type = PacketType.Delete;
