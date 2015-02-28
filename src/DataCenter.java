@@ -147,7 +147,6 @@ public class DataCenter{
 		catch(Exception e){
 			e.printStackTrace(System.out);
 		}
-		datacenter.readConfigFile(args[2]);
 		datacenter.buildConnection();
         datacenter.startThreads();
     }

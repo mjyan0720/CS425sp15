@@ -26,7 +26,6 @@ public class LinearizableDataCenter extends KeyValueDataCenter{
     	}
 		int index = Integer.parseInt(args[0]);
         DataCenter datacenter = new LinearizableDataCenter(index);
-		datacenter.initialize();
 		datacenter.buildConnection();
 
         datacenter.startThreads();
