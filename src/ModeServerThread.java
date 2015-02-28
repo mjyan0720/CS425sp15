@@ -4,9 +4,8 @@ import java.net.*;
 import java.text.*;
 
 public class ModeServerThread extends ServerThread{
-
 	public ModeServerThread(DataCenter data_center, int target){
-		super(data_center,target);
+		super(data_center, target);
 	}
 
 	@Override
@@ -31,40 +30,75 @@ public class ModeServerThread extends ServerThread{
         }// end of catch class not found exception
 	}
 
-	private void processPacket(Packet packet){
+	protected void processPacket(Packet packet){
+		int source = packet.getSource();
+		int des = packet.getDestination();
+		long time = packet.getTimestamp();
+		int key = packet.getKey();
+		int value = packet.getValue();
+		int model = packet.getModel();
+		ModeDataCenter replica = (ModeDataCenter) data_center;
         switch(packet.getType()){
-            case Message:
-                DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");
-                Date dateobj = new Date();
-                System.out.println("Received \""+packet.getMessage()
-                        +"\" from "+(char)(target+'A')
-                        +", Max delay is "+data_center.getMaxDelay(
-                            data_center.getId(), packet.getDestination())
-                        +" s, system time is "+df.format(dateobj));
-                break;
-			case Show:
+			case Insert:
+				replica.insert(key, value, time);
+				Packet p = buildAckMsg(des, source);
+				replica.insertMessage(p);
+				break;
+/*			case Show:
 				data_center.show();
+				Packet packet = buildAckMsg(des, dource);
+				data_center.insertMessage(packet);
 				break;
 			case Search:
 				data_center.search(packet.getKey());
+				Packet packet = buildAckMsg(des, dource);
+				data_center.insertMessage(packet);
 				break;
 			case Insert:
-				data_center.insert();
+				data_center.insert(key, value, time);
+				Packet packet = buildAckMsg(des, dource);
+				data_center.insertMessage(packet);
 				break;
 			case Update:
-				data_center.update();
+				data_center.update(key, value, time);
+				Packet packet = buildAckMsg(des, dource);
+				data_center.insertMessage(packet);
 				break;
 			case Delete:
-				data_center.delete();
+				data_center.delete(key);
+				Packet packet = buildAckMsg(des, dource);
+				data_center.insertMessage(packet);
 				break;
 			case Get:
-				data_center.get();
+				Content content = data_center.get(key);
+				Packet packet = buildAckMsg(des, dource);
+				data_center.insertMessage(packet);
 				break;
 			case Ack:
 				data_center.increaseAck();
 				break;
-            default:
+*/          default:
                 System.out.println("Can't recognize the packet.");
         }
+	}
+	
+	private Packet buildAckMsg(int source, int des, String content){
+		long current_time = System.currentTimeMillis();
+		Packet p = new Packet(content,current_time, source, des);
+        Random random = new Random();
+        long delay = random.nextInt(data_center.getMaxDelay(data_center.getId(),
+                    p.getDestination())*1000);
+        p.setDelay(delay);
+		return p;
+	}
+
+	private Packet buildAckMsg(int source, int des){
+		long current_time = System.currentTimeMillis();
+		Packet p = new Packet("ACK",current_time, source, des);
+        Random random = new Random();
+        long delay = random.nextInt(data_center.getMaxDelay(data_center.getId(),
+                    p.getDestination())*1000);
+        p.setDelay(delay);
+		return p;
 	}
 }

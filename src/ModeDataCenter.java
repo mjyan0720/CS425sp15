@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -13,7 +12,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
         super(index);
     }
 
-	public Socket getLeaderSocekt(){
+	public Socket getLeaderSocket(){
 		return central_socket;
 	}
     @Override
@@ -42,31 +41,54 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	}
 
 	public String show(){
+		return "";
 	}
 
-	public boolean search(int key){
-		return true; 
+	public synchronized boolean search(int key){
+		if(containsKey(key))
+			return true; 
+		return false;
 	}
 
-	public void insert(){
+	public synchronized void insert(int key, int value, long time){
+		insertPair(key, value,time);
 	}
 
-	public void update(){
+	public synchronized void insert(int key, Content content){
+		insertPair(key, content);
+	}
+	
+	public synchronized void update(int key, int value, long time){
+		updatePair(key, value, time);
 	}
 
-	public void delete(){
+	public synchronized void update(int key, Content content){
+		updatePair(key, content);
+	}
+	
+	public synchronized void delete(int key){
+		deleteKey(key);
 	}
 
-	public void get(){
+	public synchronized Content get(int key){
+		return  getValue(key);
 	}
-
-
-//	@Override
-//	public void readConfigFile(String file){
-//	}
 
 	@Override
 	public void startThreads(){
+        Thread client_thread = new Thread(new ClientThread(this));
+        Thread server_threads[] = new Thread[TOTAL_NUM];
+        for(int i=0; i<TOTAL_NUM; i++){
+            if(i!=getId()){
+                server_threads[i] = new Thread(new ModeServerThread(this, i));
+            } else {
+                server_threads[i] = new Thread(new ModeServerThread(this, TOTAL_NUM));
+            }
+         server_threads[i].start();
+        }
+        Thread message_thread = new Thread(new ModeMsgThread(this));
+        message_thread.start();
+        client_thread.start();
 	}
 
 }

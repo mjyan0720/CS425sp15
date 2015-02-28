@@ -3,19 +3,23 @@ import java.util.*;
 import java.net.*;
 import java.text.*;
 
-public class ModeMsgThread extends MessageThread{
+public class ModeMsgThread implements Runnable{
 	private ObjectOutputStream leader_obj;// = new ObjectOutputStream();
-	public ModeMsgThread(DataCenter c){
-		super(c);
+    private ObjectOutputStream obj_os[] = new ObjectOutputStream[DataCenter.TOTAL_NUM];
+	ModeDataCenter data_center;
+	public ModeMsgThread(ModeDataCenter c){
+		data_center = c;
 	}
     
-	@Override
-	private void initializeOutput() throws IOException{
+	public void initializeOutput() throws IOException{
     	OutputStream os = data_center.getLeaderSocket().getOutputStream();
     	leader_obj = new ObjectOutputStream(os);
+        for(int i=0; i<DataCenter.TOTAL_NUM; i++){
+            os = data_center.getSocket(i).getOutputStream();
+            obj_os[i] = new ObjectOutputStream(os);
+        }
     }
 
-	@Override
     public void run(){
         System.out.println("Starting Message Thread...");
         try{
@@ -24,9 +28,9 @@ public class ModeMsgThread extends MessageThread{
             System.err.println("error occur when initialize all object output stream");
             System.err.println(e);
         }
-        while( true){
+        while(true){
             //get the top packet of the queue
-			while(!data_center.messageComplete());
+//			while(!data_center.messageComplete());
             Packet packet = data_center.getMessage();
             if( packet != null ){
                 long current_time = System.currentTimeMillis();
@@ -52,4 +56,18 @@ public class ModeMsgThread extends MessageThread{
             }
         }//end of infinite loop
     }// end of run()
+
+    private void sendPacket(Packet packet) throws IOException
+    {
+        if(packet.getDestination()<0 || packet.getDestination() > DataCenter.TOTAL_NUM){
+            System.out.println("A packet with invalid desitination "+packet.getDestination()+", drop it!");
+            return;
+        }
+		else if (packet.getDestination() == DataCenter.TOTAL_NUM){
+			leader_obj.writeObject(packet);
+		}
+        else{
+			obj_os[packet.getDestination()].writeObject(packet);
+		}
+    }
 }

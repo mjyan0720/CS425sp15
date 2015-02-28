@@ -45,6 +45,14 @@ public class Packet implements Serializable{
         parsePacket();
     }
 
+	// Constructor, mainly used for Ack message
+	public Packet(String s, long t, int source, int des){
+		this.content = s;
+		this.time = t;
+		this.source = source;
+		this.destination = des;
+	}
+
     //parse the type of the packet
     private void parsePacket(){
 
@@ -144,7 +152,7 @@ public class Packet implements Serializable{
         return model;
     }
 
-    public double getTimestamp(){
+    public long getTimestamp(){
         return time;
     }
 }

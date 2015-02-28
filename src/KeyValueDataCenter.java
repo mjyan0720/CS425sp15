@@ -7,10 +7,10 @@ import java.util.concurrent.*;
 
 public abstract class KeyValueDataCenter extends DataCenter{
 
-    public class Content{
+    public class Content implements Serializable{
         public int value;
-        public double timestamp;
-		public Content(int v, double t){
+        public long timestamp;
+		public Content(int v, long t){
 			value = v;
 			timestamp = t;
 		}
@@ -38,7 +38,7 @@ public abstract class KeyValueDataCenter extends DataCenter{
 		return key_value_map.get(key);
 	}
 
-	protected void insertPair(int key, int value, double time){
+	protected void insertPair(int key, int value, long time){
 		key_value_map.put(key, new Content(value, time));
 	}
 
@@ -46,7 +46,7 @@ public abstract class KeyValueDataCenter extends DataCenter{
 		key_value_map.put(key, content);
 	}
 
-	protected void updatePair(int key, int value, double time){
+	protected void updatePair(int key, int value, long time){
 		key_value_map.put(key, new Content(value, time));
 	}
 
