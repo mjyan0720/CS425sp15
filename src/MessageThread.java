@@ -72,10 +72,10 @@ public class MessageThread implements Runnable{
             System.out.println("A packet with invalid desitination "+packet.getDestination()+", drop it!");
             return;
         }
-        if(packet.getDestination()==data_center.getId()){
-            System.out.println("Send packet to myself. This case is not handled yet. Drop packet.");
-            return;
-        }
+        //if(packet.getDestination()==data_center.getId()){
+        //    System.out.println("Send packet to myself. This case is not handled yet. Drop packet.");
+        //    return;
+        //}
         //if the destination is valid, just send it
         //TODO: haven't deal with the case send to the server itself
         //that port havn't been initialized

@@ -124,10 +124,10 @@ public class DataCenter{
         Thread client_thread = new Thread(new ClientThread(this));
         Thread server_threads[] = new Thread[TOTAL_NUM];
         for(int i=0; i<TOTAL_NUM; i++){
-            if(i!=getId()){
-                server_threads[i] = new Thread(new ServerThread(this, i));
-                server_threads[i].start();
-            }
+            //if(i!=getId()){
+            server_threads[i] = new Thread(new ServerThread(this, i));
+            server_threads[i].start();
+            //}
         }
         Thread message_thread = new Thread(new MessageThread(this));
         message_thread.start();
