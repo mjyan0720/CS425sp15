@@ -56,6 +56,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
 
 	public synchronized void insert(int key, Content content){
 		insertPair(key, content);
+		System.out.println("Successful inserting key %d" + key);
 	}
 	
 	public synchronized void update(int key, int value, long time){
@@ -90,7 +91,6 @@ public class ModeDataCenter extends KeyValueDataCenter{
         message_thread.start();
         client_thread.start();
 	}
-
 }
 
 
