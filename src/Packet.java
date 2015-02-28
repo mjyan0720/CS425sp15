@@ -9,6 +9,10 @@ public class Packet implements Serializable{
 	private long time;//unit milliseconds
     private long delay;//unit milliseconds
 
+    private int key = -1;
+    private int value = -1;
+    private int model = -1;
+
     //pasred result of packets
     private PacketType type = PacketType.Invalid;
     private int destination = -1;
@@ -21,7 +25,8 @@ public class Packet implements Serializable{
         Insert,
         Update,
         Delete,
-
+        Get,
+        Ack
     };
 
 
@@ -53,6 +58,37 @@ public class Packet implements Serializable{
             }
         }
 
+        String str[] = content.split(" ");
+
+        if(str[0].equals(new String("insert"))){
+            this.type = PacketType.Insert;
+            this.key = Integer.parseInt(str[1]);
+            this.value = Integer.parseInt(str[2]);
+            this.model = Integer.parseInt(str[3]);
+            return;
+        } else if(str[0].equals(new String("update"))){
+            this.type = PacketType.Update;
+            this.key = Integer.parseInt(str[1]);
+            this.value = Integer.parseInt(str[2]);
+            this.model = Integer.parseInt(str[3]);
+            return;
+        } else if(str[0].equals(new String("delete"))){
+            this.type = PacketType.Delete;
+            this.key = Integer.parseInt(str[1]);
+            return;
+        } else if(str[0].equals(new String("get"))){
+            this.type = PacketType.Get;
+            this.key = Integer.parseInt(str[1]);
+            return;
+        } else if(str[0].equals(new String("show-all"))){
+            this.type = PacketType.Show;
+            return;
+        } else if(str[0].equals(new String("search"))){
+            this.type = PacketType.Get;
+            this.key = Integer.parseInt(str[1]);
+            return;
+        }
+
         System.out.println("Invalid Command");
         this.type = PacketType.Invalid;
 
@@ -78,5 +114,21 @@ public class Packet implements Serializable{
 
     public void setDelay(long d){
         this.delay = d;
+    }
+
+    public int getKey(){
+        return key;
+    }
+
+    public int getValue(){
+        return value;
+    }
+
+    public int getModel(){
+        return model;
+    }
+
+    public double getTimestamp(){
+        return time;
     }
 }
