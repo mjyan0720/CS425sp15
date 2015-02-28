@@ -7,13 +7,13 @@ import java.util.concurrent.*;
 
 public class DataCenter{
 	
-    public static final int TOTAL_NUM = 3;
+    public static final int TOTAL_NUM = 4;
     public static final int base_port = 6000;
 
     private  Queue<Packet> message_queue = new LinkedBlockingQueue<Packet>();
 	private  Socket socket_map[] = new Socket[TOTAL_NUM]; 
 	private  int ports[] = new int[TOTAL_NUM];
-	private  String host_name = new String("127.0.0.1");
+	private  String host_name = new String();
 	private  int index;
 	private  int delay[][] = new int[TOTAL_NUM][TOTAL_NUM]; 
 
@@ -70,13 +70,12 @@ public class DataCenter{
 			else if(i == index){
 				try{
 					ServerSocket server_socket = new ServerSocket(ports[i]);
-					i++;
 					while(i < TOTAL_NUM){
 						Socket client_socket = server_socket.accept();
 						socket_map[i] = client_socket;
 						System.out.println("Get connection from " + i + ". Connect succeed.");
 	    				i++;
-		        }
+		        	}
 				} catch (IOException e){
 					System.out.println("2 Cannot open socket between " + i + " and " + index
                             + "; Port is " + ports[i]);
@@ -91,12 +90,29 @@ public class DataCenter{
 		try{
 			StringBuilder sb = new StringBuilder();
 			String line = br.readLine();
-			String values[];
+			String values[], delays[];
 			while(line != null){
-				values = line.split(" ");
+				values = line.split(":");
 				int i = 0;
 				for(String s: values){
-					delay[index][i++] = Integer.parseInt(s);
+					if(s.equals("IP")){
+						host_name = values[1];
+						break;
+					}
+					else if(s.equals("Ports")){
+						for(int k=0; k < TOTAL_NUM; k++){
+							ports[k] = Integer.parseInt(values[k+1]);
+						}	
+					}
+					else if(s.equals("Delay")){
+						for(int k=0; k < TOTAL_NUM; k++){
+							line = br.readLine();
+							delays = line.split(":");
+							for(int h=0; h < TOTAL_NUM; h++){
+								delay[k][h] = Integer.parseInt(delays[h]);
+							}
+						}
+					}
 				}
 				line = br.readLine();
 			}
@@ -107,12 +123,6 @@ public class DataCenter{
 		}
 	}
 		
-	public void initialize(){
-        for(int i=0; i<TOTAL_NUM; i++){
-		    ports[i] = base_port + i;
-        }
-	}
-
     void startThreads(){
         Thread client_thread = new Thread(new ClientThread(this));
         Thread server_threads[] = new Thread[TOTAL_NUM];
@@ -129,14 +139,20 @@ public class DataCenter{
 
 	public static void main(String[] args) throws IOException {
     	if (args.length < 1) {
-        	System.err.println("Usage: java DataCenter machineID(0,1,2,3)");
+        	System.err.println("Usage: java DataCenter machineID(0,1,2,3) config_file");
 	        System.exit(1);
     	}
 		int index = Integer.parseInt(args[0]);
         DataCenter datacenter = new DataCenter(index);
-		datacenter.initialize();
+		try{
+			datacenter.readConfigFile(args[1]);
+		}
+		catch(Exception e){
+			e.printStackTrace(System.out);
+		}
 		datacenter.buildConnection();
-
         datacenter.startThreads();
     }
 }
+
+
