@@ -76,7 +76,9 @@ public class LeaderMsgThread implements Runnable{
                 }
                 break;
             case Ack:
-                obj_os[packet.getDestination()].writeObject(packet);
+                System.out.println("Sent packet \""+packet.getContent()+"\" to "
+                            +(char)(i+'A'));
+                 obj_os[packet.getSource()].writeObject(packet);
                 break;
             default:
                 System.out.println("Can't recognize packet.");

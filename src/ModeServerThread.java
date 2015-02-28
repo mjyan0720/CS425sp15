@@ -50,7 +50,10 @@ public class ModeServerThread extends ServerThread{
         switch(packet.getType()){
 			case Insert:
 				replica.insert(key, value, time);
-				Packet p = buildAckMsg(source, DataCenter.TOTAL_NUM);
+                Packet p = buildAckMsg(source, DataCenter.TOTAL_NUM);
+                //if not in mode 1, should set destination to other
+                //if(packet.getModel() == 1)
+    			//	p = buildAckMsg(source, DataCenter.TOTAL_NUM);
 				replica.insertMessage(p);
 				break;
 /*			case Show:
