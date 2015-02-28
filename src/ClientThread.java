@@ -24,6 +24,13 @@ public class ClientThread implements Runnable{
                 //read a line from the terminal
                 command = buffer_reader.readLine();
                 //System.out.println(command);
+                //show all will show all local variables
+                if(command.equals(new String("show-all"))){
+                    if(!(data_center instanceof KeyValueDataCenter)){
+                        System.out.println("Can't recognize command. Only support show-all in Part 2");
+                    }
+                    ((KeyValueDataCenter)data_center).printAll();
+                }
                 //create a new packet and parse it
                 Packet packet = new Packet(command, System.currentTimeMillis(),
                         data_center.getId());
