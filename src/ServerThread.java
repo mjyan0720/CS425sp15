@@ -43,7 +43,7 @@ public class ServerThread implements Runnable{
     private void processPacket(Packet packet){
         switch(packet.getType()){
             case Message:
-                DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+                DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");
                 Date dateobj = new Date();
                 System.out.println("Received \""+packet.getMessage()
                         +"\" from "+(char)(target+'A')

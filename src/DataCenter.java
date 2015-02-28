@@ -26,8 +26,7 @@ public class DataCenter{
 	}
 
 	public  int getMaxDelay(int src, int des){
-		return 3;
-//		return delay[src][des];
+		return delay[src][des];
 	}
 
 	public  synchronized Packet getMessage(){
@@ -53,10 +52,12 @@ public class DataCenter{
         for(int i=0; i< TOTAL_NUM; i++){
             System.out.println(i + " -> " + ports[i]);
         }
+    
+        ServerSocket server_socket = new ServerSocket(ports[index]);	
 
 		for(int i=0; i < TOTAL_NUM; i++){
 		// Build socket with machines which have bigger IDs than current machine
-			if(i < index){
+			if(i <= index){
 				try{
 					Socket client_socket = new Socket(host_name,ports[i]);
 					socket_map[i] = client_socket;
@@ -67,15 +68,11 @@ public class DataCenter{
 					e.printStackTrace(System.out);
 				}
 			}
-			else if(i == index){
+			if(i >= index){
 				try{
-					ServerSocket server_socket = new ServerSocket(ports[i]);
-					while(i < TOTAL_NUM){
 						Socket client_socket = server_socket.accept();
 						socket_map[i] = client_socket;
 						System.out.println("Get connection from " + i + ". Connect succeed.");
-	    				i++;
-		        	}
 				} catch (IOException e){
 					System.out.println("2 Cannot open socket between " + i + " and " + index
                             + "; Port is " + ports[i]);
@@ -150,6 +147,7 @@ public class DataCenter{
 		catch(Exception e){
 			e.printStackTrace(System.out);
 		}
+		datacenter.readConfigFile(args[2]);
 		datacenter.buildConnection();
         datacenter.startThreads();
     }
