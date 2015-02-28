@@ -54,8 +54,8 @@ public class LeaderDataCenter extends DataCenter{
             server_threads[i] = new Thread(new ServerThread(this, i));
             server_threads[i].start();
         }
-        //Thread message_thread = new Thread(new MessageThread(this));
-        //message_thread.start();
+        Thread message_thread = new Thread(new MessageThread(this));
+        message_thread.start();
     }
    
     @Override
@@ -83,7 +83,7 @@ public class LeaderDataCenter extends DataCenter{
     public static void main(String[] args) throws IOException {
         LeaderDataCenter datacenter = new LeaderDataCenter();
 		datacenter.buildConnection();
-        //datacenter.startThreads();
+        datacenter.startThreads();
     }
 
 }
