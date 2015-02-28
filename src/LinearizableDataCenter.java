@@ -14,7 +14,7 @@ public class LinearizableDataCenter extends KeyValueDataCenter{
     //build connection with master server first
     public void buildConnection(){
 		try{
-			client_socket = new Socket(host_name, 9876);
+			Socket client_socket = new Socket(host_name, 9876);
 			System.out.println("Connection successful between server and node " + index);
 		} catch(Exception e){
 			e.printStackTrace(System.out);
