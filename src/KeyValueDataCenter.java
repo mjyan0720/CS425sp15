@@ -62,5 +62,12 @@ public abstract class KeyValueDataCenter extends DataCenter{
         return (key_value_map.get(key)!=null);
     }
 
+    public void printAll(){
+        System.out.println("Print out local key-value map below:");
+        for(Map.Entry e : key_value_map){
+            System.out.println(e.getKey()+"->"+e.getValue());
+        }
+    }
+
 }
 
