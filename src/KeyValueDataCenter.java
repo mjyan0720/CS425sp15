@@ -10,6 +10,11 @@ public abstract class KeyValueDataCenter extends DataCenter{
     public class Content{
         public double value;
         public double timestamp;
+		public Content(double v, double t){
+			value = v;
+			t = timestamp;
+		}
+
     }
 
     private Map<String, Content> key_value_map = new HashMap<String, Content>();
@@ -29,7 +34,21 @@ public abstract class KeyValueDataCenter extends DataCenter{
     // -- getMap() // return the whole map, in search all
 
 
+	protected Content getValue(String key){
+		return key_value_map[key];
+	}
 
+	protected void insertPair(String key, double value, double time){
+		key_value_map[key] = new Content(value, time);
+	}
 
+	protected void updatePair(String key, double value, double time){
+		key_value_map[key] = new Content(value, time);
+	}
+
+	protected void deleteKey(String key){
+		key_value_map[key].remove(key);
+	}
 
 }
+

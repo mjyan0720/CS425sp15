@@ -141,6 +141,12 @@ public class DataCenter{
     	}
 		int index = Integer.parseInt(args[0]);
         DataCenter datacenter = new DataCenter(index);
+		int mode = Integer.parseInt(args[2]);
+		if(mode == 1){
+			datacenter = new LinearizableDataCenter(index);		
+		}
+		else if(mode == 2){
+		}
 		try{
 			datacenter.readConfigFile(args[1]);
 		}
