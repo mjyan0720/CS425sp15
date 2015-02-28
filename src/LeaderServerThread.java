@@ -43,7 +43,7 @@ public class LeaderServerThread extends ServerThread {
                 leader_data_center.setAckPacket(packet);
                 break;
             default:
-                System.out.println("Can't recognize the packet.");
+                System.out.println("Can't recognize the packet. ->"+packet.getContent());
         }
     }
 

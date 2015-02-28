@@ -17,6 +17,11 @@ public class ModeServerThread extends ServerThread{
                 //blocking to read from the socket
                 Packet recv_packet = (Packet)obj_is.readObject();
                 if(recv_packet!=null){
+                    DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");
+                    Date dateobj = new Date();
+                    if(recv_packet.getModel()==1)
+                        System.out.println("Receive Packet \""+recv_packet.getContent()
+                                +"\" from Leader. System time is "+df.format(dateobj));
                     processPacket(recv_packet);
                 }
             }//end of infinite loop

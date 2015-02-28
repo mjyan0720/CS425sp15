@@ -51,10 +51,10 @@ public class LeaderDataCenter extends DataCenter{
         //Thread client_thread = new Thread(new ClientThread(this));
         Thread server_threads[] = new Thread[TOTAL_NUM];
         for(int i=0; i<TOTAL_NUM; i++){
-            server_threads[i] = new Thread(new ServerThread(this, i));
+            server_threads[i] = new Thread(new LeaderServerThread(this, i));
             server_threads[i].start();
         }
-        Thread message_thread = new Thread(new MessageThread(this));
+        Thread message_thread = new Thread(new LeaderMsgThread(this));
         message_thread.start();
     }
    
