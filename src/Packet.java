@@ -16,6 +16,7 @@ public class Packet implements Serializable{
     //pasred result of packets
     private PacketType type = PacketType.Invalid;
     private int destination = -1;
+    private int source = -1;
     private String message = null;
     public static enum PacketType {
         Invalid,
@@ -34,6 +35,13 @@ public class Packet implements Serializable{
     public Packet(String s, long t){
         this.content = s;
         this.time = t;
+        parsePacket();
+    }
+
+    public Packet(String s, long t, int source){
+        this.content = s;
+        this.time = t;
+        this.source = source;
         parsePacket();
     }
 
@@ -102,6 +110,10 @@ public class Packet implements Serializable{
     //use it to compare with System.currentTimeMillis()
     public long getSendTime(){
         return time+delay;
+    }
+
+    public String getContent(){
+        return content;
     }
 
     public int getDestination(){
