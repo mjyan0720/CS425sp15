@@ -6,16 +6,16 @@ import java.util.concurrent.*;
 
 public class LeaderDataCenter extends DataCenter{
 
+    public static final int LEADER_PORT = 9876;
+
     LeaderDataCenter(){ super(0); }
+    
     @Override
-    public void buildConnection() throw IOException{
+    public void buildConnection() throws IOException{
  
         //for debug, print out port information
-        for(int i=0; i< TOTAL_NUM; i++){
-            System.out.println(i + " -> " + ports[i]);
-        }
-    
-        ServerSocket server_socket = new ServerSocket(ports[index]);	
+   
+        ServerSocket server_socket = new ServerSocket(LEADER_PORT);	
 
         for(int i=0; i<DataCenter.TOTAL_NUM; i++){
 
