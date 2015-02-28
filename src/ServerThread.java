@@ -11,7 +11,7 @@ public class ServerThread implements Runnable{
     private DataCenter data_center;
 
     public ServerThread(DataCenter data_center, int target){
-        this.target = target;
+        this.target = target == DataCenter.TOTAL_NUM ? data_center.getId() : target;
         this.data_center = data_center;
         this.socket = data_center.getSocket(target);
     }
