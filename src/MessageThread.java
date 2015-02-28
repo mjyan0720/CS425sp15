@@ -13,7 +13,7 @@ public class MessageThread implements Runnable{
         this.data_center = data_center;
     }
 
-    private void initializeOutput() throws IOException{
+    public void initializeOutput() throws IOException{
         for(int i=0; i<DataCenter.TOTAL_NUM; i++){
             //if(i!=data_center.getId()){
             OutputStream os = data_center.getSocket(i).getOutputStream();
