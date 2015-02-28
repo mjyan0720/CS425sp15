@@ -11,7 +11,7 @@ public class DataCenter{
     public static final int base_port = 6000;
 
     private  Queue<Packet> message_queue = new LinkedBlockingQueue<Packet>();
-	private  Socket socket_map[] = new Socket[TOTAL_NUM]; 
+	private  Socket socket_map[] = new Socket[TOTAL_NUM+1]; 
 	private  int ports[] = new int[TOTAL_NUM];
 	private  String host_name = new String();
 	private  int index;
@@ -71,7 +71,10 @@ public class DataCenter{
 			if(i >= index){
 				try{
 						Socket client_socket = server_socket.accept();
-						socket_map[i] = client_socket;
+                        if(i==index)
+						    socket_map[TOTAL_NUM] = client_socket;
+                        else
+                            socket_map[i] = client_socket;
 						System.out.println("Get connection from " + i + ". Connect succeed.");
 				} catch (IOException e){
 					System.out.println("2 Cannot open socket between " + i + " and " + index
@@ -124,10 +127,12 @@ public class DataCenter{
         Thread client_thread = new Thread(new ClientThread(this));
         Thread server_threads[] = new Thread[TOTAL_NUM];
         for(int i=0; i<TOTAL_NUM; i++){
-            //if(i!=getId()){
-            server_threads[i] = new Thread(new ServerThread(this, i));
-            server_threads[i].start();
-            //}
+            if(i!=getId()){
+                server_threads[i] = new Thread(new ServerThread(this, i));
+            } else {
+                server_threads[i] = new Thread(new ServerThread(this, TOTAL_NUM));
+            }
+         server_threads[i].start();
         }
         Thread message_thread = new Thread(new MessageThread(this));
         message_thread.start();
