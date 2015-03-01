@@ -79,9 +79,11 @@ public class ModeServerThread extends ServerThread{
 				replica.insertMessage(p);
 				break;
 			case Get:
-				Content content = data_center.get(key);
+				Content content = replica.get(key);
 				p = buildAckMsg(source, des, packet.getModel());
-				p.setType(GetAck);
+				p.setType(Packet.PacketType.GetAck);
+				p.setValueTimestamp(content);
+				p.setKey(key);
 				replica.insertMessage(p);
 				break;
 			case Ack:
