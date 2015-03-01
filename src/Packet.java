@@ -30,7 +30,8 @@ public class Packet implements Serializable{
         Ack
     };
 
-
+	public Packet(){
+	}
     //initialize Packet with its content, creation time and delay
     public Packet(String s, long t){
         this.content = s;
