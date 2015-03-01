@@ -68,6 +68,7 @@ public class LeaderMsgThread implements Runnable{
         switch(packet.getType()){
             case Insert:
             case Update:
+            case Get:
                 for(int i=0; i<DataCenter.TOTAL_NUM; i++){
                     packet.setDestination(i);
                     System.out.println("Sent packet \""+packet.getContent()+"\" to "
@@ -76,6 +77,7 @@ public class LeaderMsgThread implements Runnable{
                 }
                 break;
             case Ack:
+            case GetAck:
                 System.out.println("Sent packet \""+packet.getContent()+"\" to "
                             +(char)(packet.getSource()+'A'));
                  obj_os[packet.getSource()].writeObject(packet);
