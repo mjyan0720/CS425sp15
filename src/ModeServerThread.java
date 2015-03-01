@@ -40,68 +40,103 @@ public class ModeServerThread extends ServerThread{
 	}
 
 	protected void processPacket(Packet packet){
-		int source = packet.getSource();
-		int des = packet.getDestination();
-		long time = packet.getTimestamp();
-		int key = packet.getKey();
-		int value = packet.getValue();
-		int model = packet.getModel();
 		ModeDataCenter replica = (ModeDataCenter) data_center;
-		Packet p;
-		if(model == 1) des = DataCenter.TOTAL_NUM;
         switch(packet.getType()){
 			case Insert:
+            {
+                int key = packet.getKey();
+                int value = packet.getValue();
+                int time = packet.getTime();
+                //perform insert operation
 				replica.insert(key, value, time);
-                p = buildAckMsg(source, des, packet.getModel());
-                //if not in mode 1, should set destination to other
-                //if(packet.getModel() == 1)
-    			//	p = buildAckMsg(source, DataCenter.TOTAL_NUM);
-				replica.insertMessage(p);
+                //create ack packet and insert it into ack queue
+                Packet p = buildAckMsg(packet);
+                p.setContent("Insert Ack For -> \""+packet.getContent()+"\"");
+                p.setType(Packet.PacketType.Ack);
+				replica.insertAckMessage(p);
 				break;
-			case Show:
-				replica.show();
-				p = buildAckMsg(source, des, packet.getModel());
-				replica.insertMessage(p);
-				break;
+            }
 			case Search:
-				p = buildAckMsg(source, des, packet.getModel());
-				p.setType(Packet.PacketType.SearchAck);
-                p.setKey(key);
-                p.setValueTimestamp(replica.get(key));
-				replica.insertMessage(p);
+            {
+                //perform search operation
+                Content res = replica.get(key);
+                //create ack packet
+				p = buildAckMsg(packet);
+	            p.setContent("Search Ack For -> \""+packet.getContent()+"\"; res = "+
+                        (res!=null));
+	    		p.setType(Packet.PacketType.SearchAck);
+                p.setValueTimestamp(res);
+				replica.insertAckMessage(p);
 				break;
-			case Update:
-				replica.update(key, value, time);
-				p = buildAckMsg(source, des, packet.getModel());
-				replica.insertMessage(p);
+            }
+			case Update:{
+	            int key = packet.getKey();
+                int value = packet.getValue();
+                int time = packet.getTime();
+                //perform operation
+ 	    		replica.update(key, value, time);
+                //create ack packet and insert into ack queue
+				p = buildAckMsg(packet);
+	            p.setContent("Update Ack For -> \""+packet.getContent()+"\"");
+	    		p.setType(Packet.PacketType.Ack);
+	    		replica.insertMessage(p);
 				break;
+            }
 			case Delete:
-				replica.delete(key);
-				p = buildAckMsg(source, des, packet.getModel());
-				replica.insertMessage(p);
+            {
+				int key = packet.getKey();
+                //perform operation
+                replica.delete(key);
+                //create ack packet and insert to ack queue
+				p = buildAckMsg(packet);
+	            p.setContent("Delete Ack For -> \""+packet.getContent()+"\"");
+	    		p.setType(Packet.PacketType.Ack);
+		    	replica.insertAckMessage(p);
 				break;
+            }
 			case Get:
-				Content content = replica.get(key);
-				p = buildAckMsg(source, des, packet.getModel());
+            {
+				int key = packet.getKey();
+                //perform operation
+	    		Content content = replica.get(key);
+                //create ack packet and insert to ack queue
+				p = buildAckMsg(this);
 				p.setType(Packet.PacketType.GetAck);
 				p.setValueTimestamp(content);
-				p.setKey(key);
-				replica.insertMessage(p);
+				replica.insertAckMessage(p);
 				break;
+            }
 			case GetAck:
+            {
+                //wait for enough read packet return
+                //ignore the following
+                //and print out result
 				processGetAck(packet);	
 				break;
+            }
 			case SearchAck:
+            {
+                //only 1 search ack will return
+                //so print it out
 				processSearchAck(packet);
 				break;
+            }
 			case Ack:
+            {
+                //receive enough acks
+                //then start original routine -> check queue
 				replica.increaseAck(time);
 				break;
+            }
             default:
                 System.out.println("Can't recognize the packet.");
         }
 	}
 
+
+    //search will always operate at model 1
+    //so we will only receive 1 such packet
+    //print out directly
 	private void processSearchAck(Packet p){
         if(p.getContent().length()==0)
 		    System.out.println("Key " + p.getKey() + " doesn't exist in any replicas.");	
@@ -123,9 +158,20 @@ public class ModeServerThread extends ServerThread{
 		return p;
 	}
 
-	private Packet buildAckMsg(int source, int des, int model){
+	private Packet buildAckMsg(Packet packet){
+        Packet p = new Packet(packet);
 		long current_time = System.currentTimeMillis();
-		Packet p = new Packet(new String("ACK"),current_time, source, des, model);
+        //use original packet's timestamp as id
+        p.setTimestamp(current_time);
+        p.setId(packet.getTimestamp());
+        if(packet.getModel()==1 || packet.getModel()==2){
+            //No need to reset source and destination
+        }else{
+            //exchange source and destination
+            p.setSource(packet.getDestination());
+            p.setDestination(p.getSource());
+        }
+        //set corresponding delay
         Random random = new Random();
         long delay = random.nextInt(data_center.getMaxDelay(data_center.getId(),
                     p.getDestination())*1000);

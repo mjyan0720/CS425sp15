@@ -7,6 +7,7 @@ public class Packet implements Serializable{
     //information provide when packet is created
 	private String content;
 	private long time;//unit milliseconds
+    private long id;
     private long delay;//unit milliseconds
 
     private int key = -1;
@@ -26,7 +27,6 @@ public class Packet implements Serializable{
     public static enum PacketType {
         Invalid,
         Message,
-        Show,
         Search,
         Insert,
         Update,
@@ -52,6 +52,7 @@ public class Packet implements Serializable{
         this.message = p.message;
         this.destination = p.destination;
         this.source = p.source;
+        this.id = p.id;
     }
     
     //initialize Packet with its content, creation time and delay
@@ -190,6 +191,10 @@ public class Packet implements Serializable{
         return source;
     }
 
+    public void setSource(int s){
+        this.source = s;
+    }
+
     public void setDestination(int dest){
         this.destination = dest;
     }
@@ -218,7 +223,19 @@ public class Packet implements Serializable{
         return model;
     }
 
+    public void setTimestamp(lond t){
+        this.time = t;
+    }
+
     public long getTimestamp(){
         return time;
+    }
+
+    public void setId(long t){
+        this.id = t;
+    }
+
+    public long getId(){
+        return id;
     }
 }
