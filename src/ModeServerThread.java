@@ -94,7 +94,7 @@ public class ModeServerThread extends ServerThread{
 				processSearchAck(packet);
 				break;
 			case Ack:
-				replica.increaseAck();
+				replica.increaseAck(time);
 				break;
             default:
                 System.out.println("Can't recognize the packet.");

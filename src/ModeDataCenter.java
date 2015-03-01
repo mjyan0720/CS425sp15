@@ -7,7 +7,8 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	protected int port;
 	protected Socket central_socket;
 	protected int ack;
-	private int ack_num;
+	protected long lastMsgTime;  // used for wait for ack
+	protected int lastMsgAckNum; // the number of ack needed to confirm the last message
     public ModeDataCenter(int index){
         super(index);
     }
@@ -29,16 +30,38 @@ public class ModeDataCenter extends KeyValueDataCenter{
     }
 
 	public synchronized boolean messageComplete(){
-		if(ack > 0){
+		if(ack >= lastMsgAckNum){
 			ack = 0;
+			lastMsgAckNum = 0;
 			return true;
 		}
 		return false;
 	}
+	
+	public synchronized void setMessageAckNum(int t){
+		lastMsgAckNum = t;
+	}
 
-	public synchronized void increaseAck(){
-		ack++;
-		System.out.println("Receving ACK message. New ACK value " + ack);
+	public synchronized int getMessageAckNum(){
+		return lastMsgAckNum;
+	}
+
+	public long getLastMessageTime(){
+		return lastMsgTime;
+	}
+
+	public void setLastMessageTime(long t){
+		lastMsgTime = t;
+	}
+
+	public synchronized void increaseAck(long t){
+		if(t == lastMsgTime){
+			ack++;
+			System.out.println("Receving ACK message. New ACK value " + ack);
+		}
+		else{
+			System.out.println("Receving ACK message not for last message, this ack time is " + t + " while last message time is " + lastMsgTime);
+		}
 	}
 
 	public String show(){
@@ -81,6 +104,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
 
 	@Override
 	public void startThreads(){
+		lastMsgAckNum = -2;
         Thread client_thread = new Thread(new ClientThread(this));
         Thread server_threads[] = new Thread[TOTAL_NUM];
 /*        for(int i=0; i<TOTAL_NUM; i++){

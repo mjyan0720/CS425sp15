@@ -3,7 +3,7 @@ import java.util.*;
 import java.net.*;
 import java.text.*;
 
-public class ModeMsgThread implements Runnable{
+public class ModeAckThread implements Runnable{
 	private ObjectOutputStream leader_obj;// = new ObjectOutputStream();
     private ObjectOutputStream obj_os[] = new ObjectOutputStream[DataCenter.TOTAL_NUM];
 	ModeDataCenter data_center;
