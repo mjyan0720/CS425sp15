@@ -27,7 +27,8 @@ public class Packet implements Serializable{
         Update,
         Delete,
         Get,
-        Ack
+        Ack,
+        GetAck
     };
 
 
