@@ -45,6 +45,21 @@ public class ModeClientThread extends ClientThread{
                 packet.setDelay(delay);
                 //used for debug
                 //print out the delay
+                if(packet.getModel()==2){
+                    //in mode 2, get will return local value
+                    //don't need to insert to ask for all
+                    if(packet.getType()==Packet.PacketType.Get){
+                        Content c = ((ModeDataCenter)data_center).get(packet.getKey());
+                        if(c==null){
+                            System.out.println("Get from local: "+packet.getKey()
+                                +"-> Doesn't exist");
+                        } else{
+                            System.out.println("Get from local: "+packet.getKey()
+                                +"->"+c.value+"; Timestamp: "+c.timestamp);
+                        }
+                        continue;
+                    }
+                }
                 System.out.println("Send the message using delay as " + delay + " Milliseconds");
                 data_center.insertMessage(packet);
                 printPacket(packet);

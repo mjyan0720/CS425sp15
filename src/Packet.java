@@ -11,14 +11,18 @@ public class Packet implements Serializable{
 
     private int key = -1;
     private int value = -1;
+    //default model is 1, used for search and delete
     private int model = 1;
     private Content value_timestamp;
 
     //pasred result of packets
     private PacketType type = PacketType.Invalid;
+    //default destination is leader
     private int destination = DataCenter.TOTAL_NUM;
+    //invalid to uninitialize source
     private int source = -1;
     private String message = null;
+
     public static enum PacketType {
         Invalid,
         Message,
