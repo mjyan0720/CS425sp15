@@ -41,7 +41,7 @@ public class ClientThread implements Runnable{
                 long delay;
                 if(packet.getModel() ==1)
                      delay = random.nextInt(data_center.getMaxDelay()*1000);
-               else
+                else
                     delay = random.nextInt(data_center.getMaxDelay(data_center.getId(),
                             packet.getDestination())*1000);
                 packet.setDelay(delay);

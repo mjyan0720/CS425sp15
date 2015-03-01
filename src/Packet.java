@@ -11,12 +11,12 @@ public class Packet implements Serializable{
 
     private int key = -1;
     private int value = -1;
-    private int model = -1;
+    private int model = 1;
     private Content value_timestamp;
 
     //pasred result of packets
     private PacketType type = PacketType.Invalid;
-    private int destination = -1;
+    private int destination = DataCenter.TOTAL_NUM;
     private int source = -1;
     private String message = null;
     public static enum PacketType {
@@ -29,7 +29,8 @@ public class Packet implements Serializable{
         Delete,
         Get,
         Ack,
-        GetAck
+        GetAck,
+        SearchAck
     };
 
 	public Packet(){
@@ -119,6 +120,9 @@ public class Packet implements Serializable{
             this.type = PacketType.Get;
             this.key = Integer.parseInt(str[1]);
             this.model = Integer.parseInt(str[2]);
+            if(this.model == 1 || this.model == 2){
+                this.destination = DataCenter.TOTAL_NUM;
+            }
             return;
         } else if(str[0].equals(new String("show-all"))){
             this.type = PacketType.Show;
@@ -153,6 +157,11 @@ public class Packet implements Serializable{
     public long getSendTime(){
         return time+delay;
     }
+
+    public void setContent(String s){
+        this.content = s;
+    }
+
 
     public String getContent(){
         return content;

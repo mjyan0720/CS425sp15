@@ -33,6 +33,7 @@ public class LeaderServerThread extends ServerThread {
                 break;
             case Ack:
             case GetAck:
+                {
                 //don't need to go to the queue
                 //just send the ack back to source
                 if(! (data_center instanceof LeaderDataCenter))
@@ -43,6 +44,20 @@ public class LeaderServerThread extends ServerThread {
                 LeaderDataCenter leader_data_center = (LeaderDataCenter)data_center;
                 leader_data_center.setAckPacket(packet);
                 break;
+                }
+            case SearchAck:
+                {
+                //don't need to go to the queue
+                //just send the ack back to source
+                if(! (data_center instanceof LeaderDataCenter))
+                    System.err.println("Can't use LeaderSeverThread from non-LeaderDataCenter class");
+                System.out.println("Received \"SearchAck\" from "+(char)(target+'A')
+                        +", Max delay is "+data_center.getMaxDelay()
+                        +" s, system time is "+df.format(dateobj));
+                LeaderDataCenter leader_data_center = (LeaderDataCenter)data_center;
+                leader_data_center.setSearchAckPacket(packet, target);
+                break;
+                }
             default:
                 System.out.println("Can't recognize the packet. ->"+packet.getContent());
         }
