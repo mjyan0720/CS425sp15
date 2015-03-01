@@ -33,9 +33,10 @@ public class LeaderDataCenter extends DataCenter{
     public synchronized void setSearchAckPacket(Packet packet, int target){
         synchronized(lock){
 
-            if(ack_received==0)
+            if(ack_received==0){
                 ack_packet = packet;
-            else{
+                search_res_list = new String("");
+            }else{
                 //check whether it's the ack packet we expect
                 if(ack_packet.getSource()!=packet.getSource()){
                     System.out.println("Error. Receive unexpected ack packets. Ignore it.");
@@ -44,7 +45,7 @@ public class LeaderDataCenter extends DataCenter{
             ack_received += 1;
 
             if(packet.getValueTimestamp() != null){
-                search_res_list += new String((char)(target+'A')+" ");
+                search_res_list += new String((char)(target+'A')+", ");
             }
         }
     }

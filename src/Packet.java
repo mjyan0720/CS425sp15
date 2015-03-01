@@ -128,7 +128,7 @@ public class Packet implements Serializable{
             this.type = PacketType.Show;
             return;
         } else if(str[0].equals(new String("search"))){
-            this.type = PacketType.Get;
+            this.type = PacketType.Search;
             this.key = Integer.parseInt(str[1]);
             return;
         } else if(content.equals(new String("ACK"))){
