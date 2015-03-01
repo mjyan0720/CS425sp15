@@ -4,18 +4,8 @@ import java.net.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-
 public abstract class KeyValueDataCenter extends DataCenter{
 
-    public class Content implements Serializable{
-        public int value;
-        public long timestamp;
-		public Content(int v, long t){
-			value = v;
-			timestamp = t;
-		}
-
-    }
 
     private Map<Integer, Content> key_value_map = new HashMap<Integer, Content>();
 

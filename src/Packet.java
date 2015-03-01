@@ -12,6 +12,7 @@ public class Packet implements Serializable{
     private int key = -1;
     private int value = -1;
     private int model = -1;
+    private Content value_timestamp;
 
     //pasred result of packets
     private PacketType type = PacketType.Invalid;
@@ -47,6 +48,13 @@ public class Packet implements Serializable{
         parsePacket();
     }
 
+    public Content getValueTimestamp(){
+        return value_timestamp;
+    }
+
+    public void setValueTimestamp(Content c){
+        this.value_timestamp = c;
+    }
 	// Constructor, mainly used for Ack message
 	public Packet(String s, long t, int source, int des, int model){
 		this.content = s;
