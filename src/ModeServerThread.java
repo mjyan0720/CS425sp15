@@ -86,6 +86,9 @@ public class ModeServerThread extends ServerThread{
 				p.setKey(key);
 				replica.insertMessage(p);
 				break;
+			case GetAck:
+				processGetAck(packet);	
+				break;
 			case Ack:
 				replica.increaseAck();
 				break;
@@ -94,6 +97,10 @@ public class ModeServerThread extends ServerThread{
         }
 	}
 	
+	private void processGetAck(Packet p){
+		System.out.println("Receiving get message: " + p.getKey() + "=>" + p.getValueTimestamp().value + " Time stamp =>" + p.getValueTimestamp().timestamp);			
+	}
+
 	private Packet buildAckMsg(int source, int des, String content, int model){
 		long current_time = System.currentTimeMillis();
 		Packet p = new Packet(content,current_time, source, des, model);
