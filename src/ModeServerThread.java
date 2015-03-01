@@ -90,6 +90,9 @@ public class ModeServerThread extends ServerThread{
 			case GetAck:
 				processGetAck(packet);	
 				break;
+			case SearchAck:
+				processSearchAck(packet);
+				break
 			case Ack:
 				replica.increaseAck();
 				break;
@@ -97,7 +100,11 @@ public class ModeServerThread extends ServerThread{
                 System.out.println("Can't recognize the packet.");
         }
 	}
-	
+
+	private void processSearchAck(Packet p){
+		System.out.println("Replicas with " + p.getKey() + " exists in replicas " + p.getContent());	
+	}
+
 	private void processGetAck(Packet p){
 		System.out.println("Receiving get message: " + p.getKey() + "=>" + p.getValueTimestamp().value + " Time stamp =>" + p.getValueTimestamp().timestamp);			
 	}
