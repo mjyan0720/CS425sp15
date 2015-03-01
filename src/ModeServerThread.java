@@ -58,38 +58,38 @@ public class ModeServerThread extends ServerThread{
 				break;
 /*			case Show:
 				data_center.show();
-				Packet packet = buildAckMsg(des, dource);
+				Packet packet = buildAckMsg(source, des);
 				data_center.insertMessage(packet);
 				break;
 			case Search:
 				data_center.search(packet.getKey());
-				Packet packet = buildAckMsg(des, dource);
+				Packet packet = buildAckMsg(source, des);
 				data_center.insertMessage(packet);
 				break;
 			case Insert:
 				data_center.insert(key, value, time);
-				Packet packet = buildAckMsg(des, dource);
+				Packet packet = buildAckMsg(source, des);
 				data_center.insertMessage(packet);
 				break;
 			case Update:
 				data_center.update(key, value, time);
-				Packet packet = buildAckMsg(des, dource);
+				Packet packet = buildAckMsg(source, des);
 				data_center.insertMessage(packet);
 				break;
 			case Delete:
 				data_center.delete(key);
-				Packet packet = buildAckMsg(des, dource);
+				Packet packet = buildAckMsg(source, des);
 				data_center.insertMessage(packet);
 				break;
 			case Get:
-				Content content = data_center.get(key);
-				Packet packet = buildAckMsg(des, dource);
+//				Content content = data_center.get(key);
+				Packet packet = buildAckMsg(source, des);
 				data_center.insertMessage(packet);
 				break;
-			case Ack:
+*/			case Ack:
 				data_center.increaseAck();
 				break;
-*/          default:
+            default:
                 System.out.println("Can't recognize the packet.");
         }
 	}
