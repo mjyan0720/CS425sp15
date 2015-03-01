@@ -47,46 +47,42 @@ public class ModeServerThread extends ServerThread{
 		int value = packet.getValue();
 		int model = packet.getModel();
 		ModeDataCenter replica = (ModeDataCenter) data_center;
+		Packet p;
         switch(packet.getType()){
 			case Insert:
 				replica.insert(key, value, time);
-                Packet p = buildAckMsg(source, DataCenter.TOTAL_NUM, packet.getModel());
+                p = buildAckMsg(source, DataCenter.TOTAL_NUM, packet.getModel());
                 //if not in mode 1, should set destination to other
                 //if(packet.getModel() == 1)
     			//	p = buildAckMsg(source, DataCenter.TOTAL_NUM);
 				replica.insertMessage(p);
 				break;
-/*			case Show:
-				data_center.show();
-				Packet packet = buildAckMsg(source, des);
-				data_center.insertMessage(packet);
+			case Show:
+				replica.show();
+				p = buildAckMsg(source, des, packet.getModel());
+				replica.insertMessage(p);
 				break;
 			case Search:
-				data_center.search(packet.getKey());
-				Packet packet = buildAckMsg(source, des);
-				data_center.insertMessage(packet);
-				break;
-			case Insert:
-				data_center.insert(key, value, time);
-				Packet packet = buildAckMsg(source, des);
-				data_center.insertMessage(packet);
+				replica.search(packet.getKey());
+				p = buildAckMsg(source, des, packet.getModel());
+				replica.insertMessage(p);
 				break;
 			case Update:
-				data_center.update(key, value, time);
-				Packet packet = buildAckMsg(source, des);
-				data_center.insertMessage(packet);
+				replica.update(key, value, time);
+				p = buildAckMsg(source, des, packet.getModel());
+				replica.insertMessage(p);
 				break;
 			case Delete:
-				data_center.delete(key);
-				Packet packet = buildAckMsg(source, des);
-				data_center.insertMessage(packet);
+				replica.delete(key);
+				p = buildAckMsg(source, des, packet.getModel());
+				replica.insertMessage(p);
 				break;
 			case Get:
 //				Content content = data_center.get(key);
-				Packet packet = buildAckMsg(source, des);
-				data_center.insertMessage(packet);
+				p = buildAckMsg(source, des, packet.getModel());
+				replica.insertMessage(p);
 				break;
-*/			case Ack:
+			case Ack:
 				replica.increaseAck();
 				break;
             default:

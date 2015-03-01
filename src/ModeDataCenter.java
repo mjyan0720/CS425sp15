@@ -63,10 +63,12 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	
 	public synchronized void update(int key, int value, long time){
 		updatePair(key, value, time);
+		System.out.println("Successful updating key " + key + " value " + value + " at time " + time);
 	}
 
 	public synchronized void update(int key, Content content){
 		updatePair(key, content);
+		System.out.println("Successful updating key " + key + " value " + content.value + " at time " + content.timestamp);
 	}
 	
 	public synchronized void delete(int key){
