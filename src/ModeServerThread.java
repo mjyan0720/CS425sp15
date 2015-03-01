@@ -48,10 +48,11 @@ public class ModeServerThread extends ServerThread{
 		int model = packet.getModel();
 		ModeDataCenter replica = (ModeDataCenter) data_center;
 		Packet p;
+		if(model == 1) des = DataCenter.TOTAL_NUM;
         switch(packet.getType()){
 			case Insert:
 				replica.insert(key, value, time);
-                p = buildAckMsg(source, DataCenter.TOTAL_NUM, packet.getModel());
+                p = buildAckMsg(source, des, packet.getModel());
                 //if not in mode 1, should set destination to other
                 //if(packet.getModel() == 1)
     			//	p = buildAckMsg(source, DataCenter.TOTAL_NUM);
