@@ -122,12 +122,13 @@ public class Packet implements Serializable{
             this.type = PacketType.Get;
             this.key = Integer.parseInt(str[1]);
             return;
-//        }else if(str[0].charAt(0)=='A'){
         } else if(content.equals(new String("ACK"))){
-            System.out.println("Create a ACK packet");
             this.type = PacketType.Ack;
             return;
-        }
+        } else if(content.equals(new String("ACK"))){
+            this.type = PacketType.Ack;
+            return;
+       }
 
         System.out.println("Invalid Command");
         this.type = PacketType.Invalid;
@@ -136,6 +137,10 @@ public class Packet implements Serializable{
 
     public PacketType getType(){
         return type;
+    }
+
+    public void setType(PacketType type){
+        this.type = type;
     }
 
     //the send time is in milliseconds
