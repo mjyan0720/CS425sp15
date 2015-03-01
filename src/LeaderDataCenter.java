@@ -11,6 +11,7 @@ public class LeaderDataCenter extends DataCenter{
     protected Packet ack_packet;
     protected int ack_received = 0;
     protected Object lock = new Object();
+    protected String search_res_list;
 
     LeaderDataCenter(){ super(0); }
 
@@ -21,11 +22,30 @@ public class LeaderDataCenter extends DataCenter{
                 ack_packet = packet;
             else{
                 //check whether it's the ack packet we expect
-                if(ack_packet.getDestination()!=packet.getDestination()){
+                if(ack_packet.getSource()!=packet.getSource()){
                     System.out.println("Error. Receive unexpected ack packets. Ignore it.");
                 }
             }
             ack_received += 1;
+        }
+    }
+
+    public synchronized void setSearchAckPacket(Packet packet, int target){
+        synchronized(lock){
+
+            if(ack_received==0)
+                ack_packet = packet;
+            else{
+                //check whether it's the ack packet we expect
+                if(ack_packet.getSource()!=packet.getSource()){
+                    System.out.println("Error. Receive unexpected ack packets. Ignore it.");
+                }
+            }
+            ack_received += 1;
+
+            if(packet.getValueTimestamp() != null){
+                search_res_list += new String((char)(target+'A')+" ");
+            }
         }
     }
 
@@ -34,9 +54,13 @@ public class LeaderDataCenter extends DataCenter{
             //if haven't receive all ack packets
             //doesn't take action
             return null;
-        else
+        else{
+            if(ack_packet.getType()==Packet.PacketType.SearchAck)
+                ack_packet.setContent(search_res_list);
             return ack_packet;
+        }
     }
+
 
     public synchronized void resetAckPacket(){
         synchronized(lock){
