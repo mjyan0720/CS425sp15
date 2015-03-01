@@ -107,19 +107,36 @@ public class ModeServerThread extends ServerThread{
 				break;
             }
 			case GetAck:
+            {
+                //wait for enough read packet return
+                //ignore the following
+                //and print out result
 				processGetAck(packet);	
 				break;
+            }
 			case SearchAck:
+            {
+                //only 1 search ack will return
+                //so print it out
 				processSearchAck(packet);
 				break;
+            }
 			case Ack:
+            {
+                //receive enough acks
+                //then start original routine -> check queue
 				replica.increaseAck(time);
 				break;
+            }
             default:
                 System.out.println("Can't recognize the packet.");
         }
 	}
 
+
+    //search will always operate at model 1
+    //so we will only receive 1 such packet
+    //print out directly
 	private void processSearchAck(Packet p){
         if(p.getContent().length()==0)
 		    System.out.println("Key " + p.getKey() + " doesn't exist in any replicas.");	
@@ -154,6 +171,7 @@ public class ModeServerThread extends ServerThread{
             p.setSource(packet.getDestination());
             p.setDestination(p.getSource());
         }
+        //set corresponding delay
         Random random = new Random();
         long delay = random.nextInt(data_center.getMaxDelay(data_center.getId(),
                     p.getDestination())*1000);
