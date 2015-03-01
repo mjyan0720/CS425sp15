@@ -48,6 +48,10 @@ public class Packet implements Serializable{
         this.key = p.key;
         this.model = p.model;
         this.value_timestamp = p.value_timestamp;
+        this.type = p.type;
+        this.message = p.message;
+        this.destination = p.destination;
+        this.source = p.source;
     }
     
     //initialize Packet with its content, creation time and delay
