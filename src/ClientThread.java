@@ -6,7 +6,7 @@ import java.text.*;
 public class ClientThread implements Runnable{
 
 
-    private DataCenter data_center;
+    protected DataCenter data_center;
 
     public ClientThread(DataCenter data_center){
         this.data_center = data_center;
@@ -24,14 +24,6 @@ public class ClientThread implements Runnable{
                 //read a line from the terminal
                 command = buffer_reader.readLine();
                 //System.out.println(command);
-                //show all will show all local variables
-                if(command.equals(new String("show-all"))){
-                    if(!(data_center instanceof KeyValueDataCenter)){
-                        System.out.println("Can't recognize command. Only support show-all in Part 2");
-                    }
-                    ((KeyValueDataCenter)data_center).printAll();
-                    continue;
-                }
                 //create a new packet and parse it
                 Packet packet = new Packet(command, System.currentTimeMillis(),
                         data_center.getId());
@@ -39,10 +31,7 @@ public class ClientThread implements Runnable{
                 //and corresponding delay
                 Random random = new Random();
                 long delay;
-                if(packet.getModel() ==1)
-                     delay = random.nextInt(data_center.getMaxDelay()*1000);
-                else
-                    delay = random.nextInt(data_center.getMaxDelay(data_center.getId(),
+                delay = random.nextInt(data_center.getMaxDelay(data_center.getId(),
                             packet.getDestination())*1000);
                 packet.setDelay(delay);
                 //used for debug
@@ -58,7 +47,7 @@ public class ClientThread implements Runnable{
    
     }
 
-    private void printPacket(Packet packet){
+    protected void printPacket(Packet packet){
         DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");
         Date dateobj = new Date();
 
@@ -72,6 +61,7 @@ public class ClientThread implements Runnable{
             case Update:
             case Get:
             case Delete:
+            case Search:
                 if(packet.getModel()==1)
                     System.out.println("Sent \""+packet.getContent()
                         +"\" to Leader, system time is "+df.format(dateobj));

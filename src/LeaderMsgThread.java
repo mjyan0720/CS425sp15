@@ -70,6 +70,7 @@ public class LeaderMsgThread implements Runnable{
             case Update:
             case Get:
             case Delete:
+            case Search:
                 for(int i=0; i<DataCenter.TOTAL_NUM; i++){
                     packet.setDestination(i);
                     System.out.println("Sent packet \""+packet.getContent()+"\" to "
@@ -78,8 +79,17 @@ public class LeaderMsgThread implements Runnable{
                 }
                 break;
             case Ack:
-            case GetAck:
                 System.out.println("Sent packet \""+packet.getContent()+"\" to "
+                            +(char)(packet.getSource()+'A'));
+                 obj_os[packet.getSource()].writeObject(packet);
+                break;
+            case GetAck:
+                 System.out.println("Sent packet \""+packet.getContent()+"\" to "
+                            +(char)(packet.getSource()+'A'));
+                 obj_os[packet.getSource()].writeObject(packet);
+                break;
+             case SearchAck:
+                 System.out.println("Sent packet \""+packet.getContent()+"\" to "
                             +(char)(packet.getSource()+'A'));
                  obj_os[packet.getSource()].writeObject(packet);
                 break;

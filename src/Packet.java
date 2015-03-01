@@ -11,14 +11,18 @@ public class Packet implements Serializable{
 
     private int key = -1;
     private int value = -1;
+    //default model is 1, used for search and delete
     private int model = 1;
     private Content value_timestamp;
 
     //pasred result of packets
     private PacketType type = PacketType.Invalid;
+    //default destination is leader
     private int destination = DataCenter.TOTAL_NUM;
+    //invalid to uninitialize source
     private int source = -1;
     private String message = null;
+
     public static enum PacketType {
         Invalid,
         Message,
@@ -35,6 +39,21 @@ public class Packet implements Serializable{
 
 	public Packet(){
 	}
+    
+    public Packet(Packet p){
+        this.content = p.content;
+        this.time = p.time;
+        this.delay = p.delay;
+        this.value = p.value;
+        this.key = p.key;
+        this.model = p.model;
+        this.value_timestamp = p.value_timestamp;
+        this.type = p.type;
+        this.message = p.message;
+        this.destination = p.destination;
+        this.source = p.source;
+    }
+    
     //initialize Packet with its content, creation time and delay
     public Packet(String s, long t){
         this.content = s;
@@ -128,7 +147,7 @@ public class Packet implements Serializable{
             this.type = PacketType.Show;
             return;
         } else if(str[0].equals(new String("search"))){
-            this.type = PacketType.Get;
+            this.type = PacketType.Search;
             this.key = Integer.parseInt(str[1]);
             return;
         } else if(content.equals(new String("ACK"))){
