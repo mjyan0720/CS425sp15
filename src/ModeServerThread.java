@@ -92,7 +92,7 @@ public class ModeServerThread extends ServerThread{
 				break;
 			case SearchAck:
 				processSearchAck(packet);
-				break
+				break;
 			case Ack:
 				replica.increaseAck();
 				break;
