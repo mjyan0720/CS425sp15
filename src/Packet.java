@@ -102,6 +102,7 @@ public class Packet implements Serializable{
         } else if(str[0].equals(new String("get"))){
             this.type = PacketType.Get;
             this.key = Integer.parseInt(str[1]);
+            this.model = Integer.parseInt(str[2]);
             return;
         } else if(str[0].equals(new String("show-all"))){
             this.type = PacketType.Show;

@@ -77,7 +77,7 @@ public class LeaderMsgThread implements Runnable{
                 break;
             case Ack:
                 System.out.println("Sent packet \""+packet.getContent()+"\" to "
-                            +(char)(i+'A'));
+                            +(char)(packet.getSource()+'A'));
                  obj_os[packet.getSource()].writeObject(packet);
                 break;
             default:

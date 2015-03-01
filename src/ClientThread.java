@@ -30,6 +30,7 @@ public class ClientThread implements Runnable{
                         System.out.println("Can't recognize command. Only support show-all in Part 2");
                     }
                     ((KeyValueDataCenter)data_center).printAll();
+                    continue;
                 }
                 //create a new packet and parse it
                 Packet packet = new Packet(command, System.currentTimeMillis(),
