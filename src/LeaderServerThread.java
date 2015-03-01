@@ -32,6 +32,7 @@ public class LeaderServerThread extends ServerThread {
                 data_center.insertMessage(packet);
                 break;
             case Ack:
+            case GetAck:
                 //don't need to go to the queue
                 //just send the ack back to source
                 if(! (data_center instanceof LeaderDataCenter))

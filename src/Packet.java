@@ -48,6 +48,10 @@ public class Packet implements Serializable{
         parsePacket();
     }
 
+    public void setKey(int key){
+        this.key = key;
+    }
+
     public Content getValueTimestamp(){
         return value_timestamp;
     }
@@ -55,6 +59,7 @@ public class Packet implements Serializable{
     public void setValueTimestamp(Content c){
         this.value_timestamp = c;
     }
+
 	// Constructor, mainly used for Ack message
 	public Packet(String s, long t, int source, int des, int model){
 		this.content = s;
