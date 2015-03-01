@@ -64,9 +64,10 @@ public class ModeServerThread extends ServerThread{
 				replica.insertMessage(p);
 				break;
 			case Search:
-				replica.search(packet.getKey());
 				p = buildAckMsg(source, des, packet.getModel());
 				p.setType(Packet.PacketType.SearchAck);
+                p.setKey(key);
+                p.setValueTimestamp(replica.get(key));
 				replica.insertMessage(p);
 				break;
 			case Update:
@@ -102,7 +103,10 @@ public class ModeServerThread extends ServerThread{
 	}
 
 	private void processSearchAck(Packet p){
-		System.out.println("Replicas with " + p.getKey() + " exists in replicas " + p.getContent());	
+        if(p.getContent().length()==0)
+		    System.out.println("Key " + p.getKey() + " doesn't exist in any replicas.");	
+        else
+		    System.out.println("Key " + p.getKey() + " exists in replicas " + p.getContent());	
 	}
 
 	private void processGetAck(Packet p){

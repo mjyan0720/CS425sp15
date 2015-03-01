@@ -42,12 +42,16 @@ public class LeaderDataCenter extends DataCenter{
                     System.out.println("Error. Receive unexpected ack packets. Ignore it.");
                 }
             }
-            ack_received += 1;
 
             if(packet.getValueTimestamp() != null){
-                search_res_list += new String((char)(target+'A')+", ");
-            }
-        }
+                if(ack_received==0)
+                    search_res_list += new String((char)(target+'A')+"");
+                else
+                    search_res_list += new String(", "+(char)(target+'A'));
+           }
+ 
+           ack_received += 1;
+       }
     }
 
     public synchronized Packet getAckPacket(){
