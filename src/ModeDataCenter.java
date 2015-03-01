@@ -38,6 +38,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
 
 	public synchronized void increaseAck(){
 		ack++;
+		System.out.println("Receving ACK message. New ACK value " + ack);
 	}
 
 	public String show(){
