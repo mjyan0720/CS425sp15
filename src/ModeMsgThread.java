@@ -28,22 +28,20 @@ public class ModeMsgThread implements Runnable{
             System.err.println("error occur when initialize all object output stream");
             System.err.println(e);
         }
+		Thread ack_thread = new Thread(new ModeAckThread(this));
+		ack_thread.start();
         while(true){
             //get the top packet of the queue
 			while(!data_center.messageComplete());
-			int model = sendOneMessage(false);
-			if(model == 3 || model == 4){
-			}
+			sendOneMessage();
         }//end of infinite loop
     }// end of run()
 
-	private int sendOneMessage(boolean flag){
-		int model = -1;
+	private void sendOneMessage(){
         Packet packet = data_center.getMessage();
         if( packet != null ){
             long current_time = System.currentTimeMillis();
             long send_time = packet.getSendTime();
-
             //check whether it's the time to send the message
             //if not, sleep for required length of time
             if(send_time > current_time){
@@ -56,17 +54,13 @@ public class ModeMsgThread implements Runnable{
             }
              //send the message
             try{
-				if(!flag){
-					setPacketVariableInDataCenter(packet);
-				}
-				model = packet.getModel();
+				setPacketVariableInDataCenter(packet);
                 sendPacket(packet);
             } catch(IOException e){
                 System.err.println("error in send packet.");
                 System.err.println(e);
             }
         }
-		return model;
 	}
 
 	private void setPacketVariableInDataCenter(Packet p){
@@ -91,7 +85,7 @@ public class ModeMsgThread implements Runnable{
 		data_center.setMessageAckNum(ack_num);
 	}
 
-    private void sendPacket(Packet packet) throws IOException
+    protected synchronized void sendPacket(Packet packet) throws IOException
     {
         if(packet.getDestination()<0 || packet.getDestination() > DataCenter.TOTAL_NUM){
             System.out.println("A packet with invalid desitination "+packet.getDestination()+", drop it!");
@@ -104,4 +98,8 @@ public class ModeMsgThread implements Runnable{
 			obj_os[packet.getDestination()].writeObject(packet);
 		}
     }
+
+	public ModeDataCenter getDataCenter(){
+		return data_center;
+	}
 }

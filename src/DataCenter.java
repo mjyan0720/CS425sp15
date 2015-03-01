@@ -12,6 +12,7 @@ public class DataCenter{
     public static final int MAX_DELAY = 3;
 
     protected  Queue<Packet> message_queue = new LinkedBlockingQueue<Packet>();
+    protected  Queue<Packet> ack_queue = new LinkedBlockingQueue<Packet>();
 	protected  Socket socket_map[] = new Socket[TOTAL_NUM+1]; 
 	protected  int ports[] = new int[TOTAL_NUM];
 	protected  String host_name = new String();
@@ -42,11 +43,19 @@ public class DataCenter{
     		return message_queue.poll();
 	}
 
+	public  synchronized Packet getAckMessage(){
+	// Return one message if the message queue is not empty
+    		return ack_queue.poll();
+	}
 	public  synchronized void insertMessage(Packet p){
 	// Return one message if the message queue is not empty
 		message_queue.add(p);
 	}
 
+	public  synchronized void insertAckMessage(Packet p){
+	// Return one message if the message queue is not empty
+		ack_queue.add(p);
+	}
 	//@Parameter: machine ID
 	public  Socket getSocket(int id){
 	// Return one message if the message queue is not empty
