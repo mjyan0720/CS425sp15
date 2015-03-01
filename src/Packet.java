@@ -46,11 +46,12 @@ public class Packet implements Serializable{
     }
 
 	// Constructor, mainly used for Ack message
-	public Packet(String s, long t, int source, int des){
+	public Packet(String s, long t, int source, int des, int model){
 		this.content = s;
 		this.time = t;
 		this.source = source;
 		this.destination = des;
+        this.model = model;
         parsePacket();
 	}
 
@@ -111,8 +112,8 @@ public class Packet implements Serializable{
             this.type = PacketType.Get;
             this.key = Integer.parseInt(str[1]);
             return;
-        }else if(str[0].charAt(0)=='A'){
-//        } else if(content.equals(new String("ACK"))){
+//        }else if(str[0].charAt(0)=='A'){
+        } else if(content.equals(new String("ACK"))){
             System.out.println("Create a ACK packet");
             this.type = PacketType.Ack;
             return;

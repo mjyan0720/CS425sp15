@@ -50,7 +50,7 @@ public class ModeServerThread extends ServerThread{
         switch(packet.getType()){
 			case Insert:
 				replica.insert(key, value, time);
-                Packet p = buildAckMsg(source, DataCenter.TOTAL_NUM);
+                Packet p = buildAckMsg(source, DataCenter.TOTAL_NUM, packet.getModel());
                 //if not in mode 1, should set destination to other
                 //if(packet.getModel() == 1)
     			//	p = buildAckMsg(source, DataCenter.TOTAL_NUM);
@@ -87,16 +87,16 @@ public class ModeServerThread extends ServerThread{
 				data_center.insertMessage(packet);
 				break;
 */			case Ack:
-				data_center.increaseAck();
+				replica.increaseAck();
 				break;
             default:
                 System.out.println("Can't recognize the packet.");
         }
 	}
 	
-	private Packet buildAckMsg(int source, int des, String content){
+	private Packet buildAckMsg(int source, int des, String content, int model){
 		long current_time = System.currentTimeMillis();
-		Packet p = new Packet(content,current_time, source, des);
+		Packet p = new Packet(content,current_time, source, des, model);
         Random random = new Random();
         long delay = random.nextInt(data_center.getMaxDelay(data_center.getId(),
                     p.getDestination())*1000);
@@ -104,9 +104,9 @@ public class ModeServerThread extends ServerThread{
 		return p;
 	}
 
-	private Packet buildAckMsg(int source, int des){
+	private Packet buildAckMsg(int source, int des, int model){
 		long current_time = System.currentTimeMillis();
-		Packet p = new Packet(new String("ACK"),current_time, source, des);
+		Packet p = new Packet(new String("ACK"),current_time, source, des, model);
         Random random = new Random();
         long delay = random.nextInt(data_center.getMaxDelay(data_center.getId(),
                     p.getDestination())*1000);
