@@ -35,6 +35,17 @@ public class Packet implements Serializable{
 
 	public Packet(){
 	}
+    
+    public Packet(Packet p){
+        this.content = p.content;
+        this.time = p.time;
+        this.delay = p.delay;
+        this.value = p.value;
+        this.key = p.key;
+        this.model = p.model;
+        this.value_timestamp = p.value_timestamp;
+    }
+    
     //initialize Packet with its content, creation time and delay
     public Packet(String s, long t){
         this.content = s;

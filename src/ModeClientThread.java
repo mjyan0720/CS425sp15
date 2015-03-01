@@ -37,7 +37,7 @@ public class ModeClientThread extends ClientThread{
                 //and corresponding delay
                 Random random = new Random();
                 long delay;
-                if(packet.getModel() ==1)
+                if(packet.getModel() == 1 | packet.getModel() == 2)
                      delay = random.nextInt(data_center.getMaxDelay()*1000);
                 else
                     delay = random.nextInt(data_center.getMaxDelay(data_center.getId(),
