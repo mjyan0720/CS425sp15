@@ -66,6 +66,7 @@ public class ModeServerThread extends ServerThread{
 			case Search:
 				replica.search(packet.getKey());
 				p = buildAckMsg(source, des, packet.getModel());
+				p.setType(Packet.PacketType.SearchAck);
 				replica.insertMessage(p);
 				break;
 			case Update:
