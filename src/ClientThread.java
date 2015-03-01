@@ -63,7 +63,7 @@ public class ClientThread implements Runnable{
             case Delete:
             case Search:
                 if(packet.getModel()==1)
-                    System.out.println("Sent \""+packet.getContent()
+                    System.out.println("Insert \""+packet.getContent()
                         +"\" to Leader, system time is "+df.format(dateobj));
                 break;
             default:
