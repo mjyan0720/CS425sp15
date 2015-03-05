@@ -121,6 +121,34 @@ public class ModeDataCenter extends KeyValueDataCenter{
         message_thread.start();
         client_thread.start();
 	}
+
+	public static void main(String[] args) throws IOException {
+    	if (args.length < 1) {
+        	System.err.println("Usage: java DataCenter machineID(0,1,2,3) config_file");
+	        System.exit(1);
+    	}
+        //first parameter is ID
+		int index = Integer.parseInt(args[0]);
+        DataCenter datacenter = new DataCenter(index);
+        //second parameter is configuration file
+		try{
+			datacenter.readConfigFile(args[1]);
+		}
+		catch(Exception e){
+			e.printStackTrace(System.out);
+		}
+
+        //third parameter is optional, if provided
+        //non-zero means read from file
+        if(args[2]!=null && Integer.parseInt(args[2])!=0)//default read from terminal
+            DataCenter.ReadFromFile = true;
+
+		datacenter.buildConnection();
+        datacenter.startThreads();
+    }
+
+
+
 }
 
 

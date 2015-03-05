@@ -10,6 +10,7 @@ public class DataCenter{
     public static final int TOTAL_NUM = 2;
     public static final int base_port = 6000;
     public static final int MAX_DELAY = 3;
+    public static boolean ReadFromFile = false;
 
     protected  Queue<Packet> message_queue = new LinkedBlockingQueue<Packet>();
     protected  Queue<Packet> ack_queue = new LinkedBlockingQueue<Packet>();
@@ -161,14 +162,10 @@ public class DataCenter{
         	System.err.println("Usage: java DataCenter machineID(0,1,2,3) config_file");
 	        System.exit(1);
     	}
+        //the first parameter is ID
 		int index = Integer.parseInt(args[0]);
         DataCenter datacenter = new DataCenter(index);
-		int mode = Integer.parseInt(args[2]);
-		if(mode == 1){
-			datacenter = new ModeDataCenter(index);		
-		}
-		else if(mode == 2){
-		}
+        //the second parameter is configuration file
 		try{
 			datacenter.readConfigFile(args[1]);
 		}
