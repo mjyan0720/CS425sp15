@@ -21,7 +21,6 @@ public class LeaderServerThread extends ServerThread {
             case Update:
             case Delete:
             case Get:
-            case Show:
             case Search:
                 //put the packet into the queue
                 System.out.println("Received \""+packet.getContent()

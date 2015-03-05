@@ -46,7 +46,7 @@ public class ModeServerThread extends ServerThread{
             {
                 int key = packet.getKey();
                 int value = packet.getValue();
-                int time = packet.getTime();
+                long time = packet.getTimestamp();
                 //perform insert operation
 				replica.insert(key, value, time);
                 //create ack packet and insert it into ack queue
@@ -58,10 +58,11 @@ public class ModeServerThread extends ServerThread{
             }
 			case Search:
             {
+                int key = packet.getKey();
                 //perform search operation
                 Content res = replica.get(key);
                 //create ack packet
-				p = buildAckMsg(packet);
+				Packet p = buildAckMsg(packet);
 	            p.setContent("Search Ack For -> \""+packet.getContent()+"\"; res = "+
                         (res!=null));
 	    		p.setType(Packet.PacketType.SearchAck);
@@ -72,11 +73,11 @@ public class ModeServerThread extends ServerThread{
 			case Update:{
 	            int key = packet.getKey();
                 int value = packet.getValue();
-                int time = packet.getTime();
+                long time = packet.getTimestamp();
                 //perform operation
  	    		replica.update(key, value, time);
                 //create ack packet and insert into ack queue
-				p = buildAckMsg(packet);
+				Packet p = buildAckMsg(packet);
 	            p.setContent("Update Ack For -> \""+packet.getContent()+"\"");
 	    		p.setType(Packet.PacketType.Ack);
 	    		replica.insertMessage(p);
@@ -88,7 +89,7 @@ public class ModeServerThread extends ServerThread{
                 //perform operation
                 replica.delete(key);
                 //create ack packet and insert to ack queue
-				p = buildAckMsg(packet);
+				Packet p = buildAckMsg(packet);
 	            p.setContent("Delete Ack For -> \""+packet.getContent()+"\"");
 	    		p.setType(Packet.PacketType.Ack);
 		    	replica.insertAckMessage(p);
@@ -100,7 +101,7 @@ public class ModeServerThread extends ServerThread{
                 //perform operation
 	    		Content content = replica.get(key);
                 //create ack packet and insert to ack queue
-				p = buildAckMsg(this);
+				Packet p = buildAckMsg(packet);
 				p.setType(Packet.PacketType.GetAck);
 				p.setValueTimestamp(content);
 				replica.insertAckMessage(p);
