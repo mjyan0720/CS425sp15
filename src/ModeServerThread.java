@@ -23,10 +23,13 @@ public class ModeServerThread extends ServerThread{
                 if(recv_packet!=null){
                     DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");
                     Date dateobj = new Date();
-//                    if(recv_packet.getModel()==1)
+                    if(recv_packet.getModel()==1 || recv_packet.getModel()==2)
+                        System.out.println("Receive Packet \""+recv_packet.getContent()
+                                +"\" from Leader. System time is "+df.format(dateobj));
+                    else
                         System.out.println("Receive Packet \""+recv_packet.getContent()
                                 +"\" from "+(char)(recv_packet.getSource()+'A')+". System time is "+df.format(dateobj));
-                    processPacket(recv_packet);
+                   processPacket(recv_packet);
                 }
             }//end of infinite loop
 
