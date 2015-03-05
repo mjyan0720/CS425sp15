@@ -144,9 +144,6 @@ public class Packet implements Serializable{
                 this.destination = DataCenter.TOTAL_NUM;
             }
             return;
-        } else if(str[0].equals(new String("show-all"))){
-            this.type = PacketType.Show;
-            return;
         } else if(str[0].equals(new String("search"))){
             this.type = PacketType.Search;
             this.key = Integer.parseInt(str[1]);
@@ -223,7 +220,7 @@ public class Packet implements Serializable{
         return model;
     }
 
-    public void setTimestamp(lond t){
+    public void setTimestamp(long t){
         this.time = t;
     }
 
