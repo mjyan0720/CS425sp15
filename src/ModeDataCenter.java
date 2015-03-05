@@ -8,6 +8,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	protected Socket central_socket;
 	protected int ack;
 	protected long lastMsgTime;  // used for wait for ack
+	protected Object lockAckNum = new Object();
 	protected int lastMsgAckNum; // the number of ack needed to confirm the last message
     public ModeDataCenter(int index){
         super(index);
@@ -30,20 +31,24 @@ public class ModeDataCenter extends KeyValueDataCenter{
     }
 
 	public synchronized boolean messageComplete(){
-		if(ack >= lastMsgAckNum){
-			ack = 0;
-			lastMsgAckNum = 0;
-			return true;
+		synchronized (lockAckNum){
+			if(ack >= lastMsgAckNum){
+				return true;
+			}
+			return false;
 		}
-		return false;
 	}
 	
 	public synchronized void setMessageAckNum(int t){
-		lastMsgAckNum = t;
+		synchronized (lockAckNum){
+			lastMsgAckNum = t;
+		}
 	}
 
 	public synchronized int getMessageAckNum(){
-		return lastMsgAckNum;
+		synchronized (lockAckNum){
+			return lastMsgAckNum;
+		}
 	}
 
 	public long getLastMessageTime(){
@@ -55,12 +60,24 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	}
 
 	public synchronized void increaseAck(long t){
-		if(t == lastMsgTime){
-			ack++;
-			System.out.println("Receving ACK message for message " + t +". New ACK value " + ack);
-		}
-		else{
-			System.out.println("Receving ACK message not for last message, neglected. This ack time is " + t + " while last message time is " + lastMsgTime);
+		synchronized (lockAckNum){
+			if(t != lastMsgTime){
+				System.out.println("Ignoring ACK time is " + t);
+				return;
+			}
+			else if(t == lastMsgTime && ack < lastMsgAckNum){
+				ack++;
+				if(ack == lastMsgAckNum){
+					lastMsgAckNum = -1;
+					ack = 0;
+					lastMsgTime = -1;
+				}
+				System.out.println("Receving ACK message for message " + t +". New ACK value " + ack);
+			}
+			else{
+				System.out.println("Impossible! Receving ACK message not for last message, neglected. This ack time is "
+				+ t + " while last message time is " + lastMsgTime);
+			}
 		}
 	}
 

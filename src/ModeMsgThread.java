@@ -92,16 +92,16 @@ public class ModeMsgThread implements Runnable{
 	                System.err.println(e);
     	        }
 			}
-			System.out.println("After sending message, new ack_num is " + data_center.lastMsgAckNum);
+			System.out.println("After sending message, new ack_num is " + data_center.getMessageAckNum());
         }
 	}
 
 	private void setPacketVariableInDataCenter(Packet p){
-		data_center.setLastMessageTime(p.getTimestamp());
 		int ack_num = 0;
 		int model = p.getModel();
 		Packet.PacketType type = p.getType();
 		switch(type){
+			case Search:
 			case Delete:
 				ack_num = 1;
 				break;
@@ -116,11 +116,13 @@ public class ModeMsgThread implements Runnable{
 				ack_num = 0;
 				break;
 		}
+		data_center.setLastMessageTime(p.getTimestamp());
 		data_center.setMessageAckNum(ack_num);
 	}
 
     protected synchronized void sendPacket(Packet packet) throws IOException
     {
+        System.out.println("A packet with desitination "+packet.getDestination() + ", lastMsgAckNum " + data_center.getMessageAckNum());
         if(packet.getDestination()<0 || packet.getDestination() > DataCenter.TOTAL_NUM){
             System.out.println("A packet with invalid desitination "+packet.getDestination()+", drop it!");
             return;
