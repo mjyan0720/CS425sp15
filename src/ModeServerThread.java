@@ -107,6 +107,7 @@ public class ModeServerThread extends ServerThread{
 				Packet p = buildAckMsg(packet);
 				p.setType(Packet.PacketType.GetAck);
 				p.setValueTimestamp(content);
+				p.setKey(key);
 				replica.insertAckMessage(p);
 				break;
             }
@@ -151,10 +152,19 @@ public class ModeServerThread extends ServerThread{
 	}
 
 	private void processGetAck(Packet p){
+		ModeDataCenter replica = (ModeDataCenter) data_center;
         if(p.getValueTimestamp()==null)
-    		System.out.println("Receiving get message: " + p.getKey() + "=>" + "is not in data center");
-        else
-    		System.out.println("Receiving get message: " + p.getKey() + "=>" + p.getValueTimestamp().value + " Time stamp =>" + p.getValueTimestamp().timestamp);			
+    		System.out.println("Receiving get message: " + p.getKey() + "=>" 
+			+ "is not in data center");
+        else{
+    		System.out.println("Receiving get message: " + p.getKey() + "=>" 
+			+ p.getValueTimestamp().value + " Time stamp =>" + p.getValueTimestamp().timestamp);	
+			Content t = p.getValueTimestamp();
+			Content old = replica.get(p.getKey());
+			if(old != null && old.timestamp < t.timestamp){
+				replica.updatePair(p.getKey(),t);
+			}
+		}
 	}
 
 /*	private Packet buildAckMsg(int source, int des, String content, int model){

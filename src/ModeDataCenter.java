@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.text.*;
 
 public class ModeDataCenter extends KeyValueDataCenter{
 	protected int port;
@@ -62,7 +63,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	public synchronized void increaseAck(long t){
 		synchronized (lockAckNum){
 			if(t != lastMsgTime){
-				System.out.println("Ignoring ACK time is " + t + "; It's not the packet we expect");
+//				System.out.println("Ignoring ACK time is " + t + "; It's not the packet we expect");
 				return;
 			}
 			else if(t == lastMsgTime){
@@ -71,12 +72,15 @@ public class ModeDataCenter extends KeyValueDataCenter{
 					lastMsgAckNum = -1;
 					ack = 0;
 					lastMsgTime = -1;
+					System.out.println("Message Complete");
 				}
-				System.out.println("Receving ACK message for message " + t +". New ACK value " + ack);
 			}
 			else{
+				DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");
+				Date t1 = new Date(t);
+				Date t2 = new Date(lastMsgTime);
 				System.out.println("Impossible! Receving ACK message not for last message, neglected. This ack time is "
-				+ t + " while last message time is " + lastMsgTime);
+				+ df.format(t1) + " while last message time is " + df.format(t2));
 			}
 		}
 	}
@@ -115,7 +119,9 @@ public class ModeDataCenter extends KeyValueDataCenter{
 			if(old.timestamp > time) return;
 		}
 		updatePair(key, value, time);
-		System.out.println("Successful updating key " + key + " value " + value + " at time " + time);
+		DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");
+		Date t = new Date(time);
+		System.out.println("Successful updating key " + key + " value " + value + " at time " + df.format(t));
 	}
 
 	public synchronized void update(int key, Content content){
@@ -124,7 +130,9 @@ public class ModeDataCenter extends KeyValueDataCenter{
 			if(old.timestamp > content.timestamp) return;
 		}
 		updatePair(key, content);
-		System.out.println("Successful updating key " + key + " value " + content.value + " at time " + content.timestamp);
+		DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");
+		Date t = new Date(content.timestamp);
+		System.out.println("Successful updating key " + key + " value " + content.value + " at time " + df.format(t));
 	}
 	
 	public synchronized void delete(int key){

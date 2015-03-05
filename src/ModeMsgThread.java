@@ -94,7 +94,7 @@ public class ModeMsgThread implements Runnable{
 	                System.err.println(e);
     	        }
 			}
-			System.out.println("After sending message, new ack_num is " + data_center.getMessageAckNum());
+//			System.out.println("After sending message, new ack_num is " + data_center.getMessageAckNum());
         }
 	}
 
@@ -124,7 +124,7 @@ public class ModeMsgThread implements Runnable{
 
     protected synchronized void sendPacket(Packet packet) throws IOException
     {
-        System.out.println("A packet with desitination "+packet.getDestination() + ", lastMsgAckNum " + data_center.getMessageAckNum());
+//        System.out.println("A packet with desitination "+packet.getDestination() + ", lastMsgAckNum " + data_center.getMessageAckNum());
         if(packet.getDestination()<0 || packet.getDestination() > DataCenter.TOTAL_NUM){
             System.out.println("A packet with invalid desitination "+packet.getDestination()+", drop it!");
             return;
