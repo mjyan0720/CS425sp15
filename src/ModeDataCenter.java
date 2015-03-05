@@ -105,7 +105,6 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	@Override
 	public void startThreads(){
 		lastMsgAckNum = -2;
-        Thread client_thread = new Thread(new ModeClientThread(this));
         Thread server_threads[] = new Thread[TOTAL_NUM];
         for(int i=0; i<TOTAL_NUM; i++){
             if(i!=getId()){
@@ -119,6 +118,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
         server_thread_listen_to_leader.start();
         Thread message_thread = new Thread(new ModeMsgThread(this));
         message_thread.start();
+        Thread client_thread = new Thread(new ModeClientThread(this));
         client_thread.start();
 	}
 
@@ -142,7 +142,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
         //non-zero means read from file
         if(args[2]!=null && Integer.parseInt(args[2])!=0)//default read from terminal
             DataCenter.ReadFromFile = true;
-
+        System.out.println("set up read from file "+args[2]+" "+DataCenter.ReadFromFile);
 		datacenter.buildConnection();
         datacenter.startThreads();
     }

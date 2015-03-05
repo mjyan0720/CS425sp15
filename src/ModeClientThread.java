@@ -24,15 +24,20 @@ public class ModeClientThread extends ClientThread{
 
     @Override
     public void run(){
-         System.out.println("Starting Client thread. Read from Terminal...");
         //  open up standard input
         BufferedReader buffer_reader = new BufferedReader(new InputStreamReader(System.in));
         try{
-            if(DataCenter.ReadFromFile)
+            if(DataCenter.ReadFromFile==true)
                 buffer_reader = new BufferedReader(new FileReader("input"+data_center.getId()));
         } catch(IOException e){
             System.err.println("Error in reading from input file: "+e);
         }
+
+        System.out.println(DataCenter.ReadFromFile);
+        if(DataCenter.ReadFromFile==true)
+            System.out.println("Starting Client thread. Read from File \"input"+data_center.getId()+"\"...");
+        else
+            System.out.println("Starting Client thread. Read from Terminal...");
 
         String command = null;
         try{

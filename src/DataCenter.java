@@ -7,7 +7,7 @@ import java.util.concurrent.*;
 
 public class DataCenter{
 	
-    public static final int TOTAL_NUM = 2;
+    public static final int TOTAL_NUM = 4;
     public static final int base_port = 6000;
     public static final int MAX_DELAY = 3;
     public static boolean ReadFromFile = false;
