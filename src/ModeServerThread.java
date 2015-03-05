@@ -169,8 +169,9 @@ public class ModeServerThread extends ServerThread{
             //No need to reset source and destination
         }else{
             //exchange source and destination
+            int s = p.getSource();
             p.setSource(packet.getDestination());
-            p.setDestination(p.getSource());
+            p.setDestination(s);
         }
         //set corresponding delay
         Random random = new Random();
