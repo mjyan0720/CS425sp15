@@ -45,6 +45,7 @@ public class ModeMsgThread implements Runnable{
 			if(packet.getModel() == 3 || packet.getModel() == 4){
 				// send 4 messages
 				do{
+					while(packet == NULL) packet = data_center.getMessage();
 		            long current_time = System.currentTimeMillis();
    			        long send_time = packet.getSendTime();
 					setPacketVariableInDataCenter(packet);
@@ -65,8 +66,6 @@ public class ModeMsgThread implements Runnable{
     	           		System.err.println("error in send packet.");
 	    	            System.err.println(e);
    		    	    }
-					if(i < 3)
-	       				packet = data_center.getMessage();
 				}while(i++ < 4);
 			}
 			else{
