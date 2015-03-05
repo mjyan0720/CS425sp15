@@ -115,6 +115,7 @@ public class ModeServerThread extends ServerThread{
                 //wait for enough read packet return
                 //ignore the following
                 //and print out result
+				replica.increaseAck(packet.getId());
 				processGetAck(packet);	
 				break;
             }
@@ -122,6 +123,7 @@ public class ModeServerThread extends ServerThread{
             {
                 //only 1 search ack will return
                 //so print it out
+				replica.increaseAck(packet.getId());
 				processSearchAck(packet);
 				break;
             }
