@@ -57,10 +57,10 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	public synchronized void increaseAck(long t){
 		if(t == lastMsgTime){
 			ack++;
-			System.out.println("Receving ACK message. New ACK value " + ack);
+			System.out.println("Receving ACK message for message " + t +". New ACK value " + ack);
 		}
 		else{
-			System.out.println("Receving ACK message not for last message, this ack time is " + t + " while last message time is " + lastMsgTime);
+			System.out.println("Receving ACK message not for last message, neglected. This ack time is " + t + " while last message time is " + lastMsgTime);
 		}
 	}
 
@@ -75,21 +75,37 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	}
 
 	public synchronized void insert(int key, int value, long time){
+		Content old = getValue(key);
+		if(old != null){
+			if(old.timestamp > time) return;
+		}
 		insertPair(key, value,time);
 		System.out.println("Successful inserting key " + key);
     }
 
 	public synchronized void insert(int key, Content content){
+		Content old = getValue(key);
+		if(old != null){
+			if(old.timestamp > content.timestamp) return;
+		}
 		insertPair(key, content);
 		System.out.println("Successful inserting key " + key);
 	}
 	
 	public synchronized void update(int key, int value, long time){
+		Content old = getValue(key);
+		if(old != null){
+			if(old.timestamp > time) return;
+		}
 		updatePair(key, value, time);
 		System.out.println("Successful updating key " + key + " value " + value + " at time " + time);
 	}
 
 	public synchronized void update(int key, Content content){
+		Content old = getValue(key);
+		if(old != null){
+			if(old.timestamp > content.timestamp) return;
+		}
 		updatePair(key, content);
 		System.out.println("Successful updating key " + key + " value " + content.value + " at time " + content.timestamp);
 	}
