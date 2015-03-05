@@ -23,9 +23,9 @@ public class ModeServerThread extends ServerThread{
                 if(recv_packet!=null){
                     DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");
                     Date dateobj = new Date();
-                    if(recv_packet.getModel()==1)
+//                    if(recv_packet.getModel()==1)
                         System.out.println("Receive Packet \""+recv_packet.getContent()
-                                +"\" from Leader. System time is "+df.format(dateobj));
+                                +"\" from "+(char)(recv_packet.getSource()+'A')+". System time is "+df.format(dateobj));
                     processPacket(recv_packet);
                 }
             }//end of infinite loop
@@ -149,7 +149,7 @@ public class ModeServerThread extends ServerThread{
 		System.out.println("Receiving get message: " + p.getKey() + "=>" + p.getValueTimestamp().value + " Time stamp =>" + p.getValueTimestamp().timestamp);			
 	}
 
-	private Packet buildAckMsg(int source, int des, String content, int model){
+/*	private Packet buildAckMsg(int source, int des, String content, int model){
 		long current_time = System.currentTimeMillis();
 		Packet p = new Packet(content,current_time, source, des, model);
         Random random = new Random();
@@ -158,7 +158,7 @@ public class ModeServerThread extends ServerThread{
         p.setDelay(delay);
 		return p;
 	}
-
+*/
 	private Packet buildAckMsg(Packet packet){
         Packet p = new Packet(packet);
 		long current_time = System.currentTimeMillis();
