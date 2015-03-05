@@ -53,14 +53,22 @@ public class ModeClientThread extends ClientThread{
                         data_center.getId());
                 //use information of the packet to determine destination
                 //and corresponding delay
-                
+ 
+                if(packet.getType()==Packet.PacketType.Delay){
+                   try{
+                       Thread.sleep(packet.getDelay());
+                   }catch(InterruptedException e){
+                       System.err.println("In processing delay command:"+e);
+                   }
+                }
+
+               
                 //--------------------------------------
                 //set destination
                 //in mode 1/2, destination is Leader
                 //in mode 3/4, we should create 4 packets, insert them into the queue
                 //in a sorted order, with the shortest dealy at the head
                 //-------------------------------------
-
                 if(packet.getModel()==1 || packet.getModel()==2){
                     //set destination to leader
                     packet.setDestination(DataCenter.TOTAL_NUM);

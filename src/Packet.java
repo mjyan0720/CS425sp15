@@ -34,7 +34,8 @@ public class Packet implements Serializable{
         Get,
         Ack,
         GetAck,
-        SearchAck
+        SearchAck,
+        Delay
     };
 
 	public Packet(){
@@ -151,8 +152,9 @@ public class Packet implements Serializable{
         } else if(content.equals(new String("ACK"))){
             this.type = PacketType.Ack;
             return;
-        } else if(content.equals(new String("ACK"))){
-            this.type = PacketType.Ack;
+        } else if(str[0].equals(new String("delay"))){
+            this.type = PacketType.Delay;
+            this.delay = Integer.parseInt(str[1])*1000;
             return;
        }
 
@@ -169,6 +171,9 @@ public class Packet implements Serializable{
         this.type = type;
     }
 
+    public long getDelay(){
+        return delay;
+    }
     //the send time is in milliseconds
     //use it to compare with System.currentTimeMillis()
     public long getSendTime(){
