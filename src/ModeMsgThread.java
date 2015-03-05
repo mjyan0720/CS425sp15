@@ -33,33 +33,64 @@ public class ModeMsgThread implements Runnable{
         while(true){
             //get the top packet of the queue
 			while(!data_center.messageComplete());
-			sendOneMessage();
+			// If the mode is 3 or 4, continue to send 4 messages 
+			sendMessage();
         }//end of infinite loop
     }// end of run()
 
-	private void sendOneMessage(){
+	private void sendMessage(){
         Packet packet = data_center.getMessage();
         if( packet != null ){
-            long current_time = System.currentTimeMillis();
-            long send_time = packet.getSendTime();
-            //check whether it's the time to send the message
-            //if not, sleep for required length of time
-            if(send_time > current_time){
-                try{
-                    Thread.sleep(send_time - current_time);
-                } catch(InterruptedException e){
-                    System.err.println("In message thread, message delay is interrupted.");
-                    System.err.println(e);
-                }
-            }
-             //send the message
-            try{
-				setPacketVariableInDataCenter(packet);
-                sendPacket(packet);
-            } catch(IOException e){
-                System.err.println("error in send packet.");
-                System.err.println(e);
-            }
+			int i=0;
+			if(packet.getMode() == 3 || packet.getMode() == 4){
+				// send 4 messages
+				do{
+		            long current_time = System.currentTimeMillis();
+   			        long send_time = packet.getSendTime();
+					setPacketVariableInDataCenter(packet);
+       		    	//check whether it's the time to send the message
+	           		//if not, sleep for required length of time
+		            if(send_time > current_time){
+   			            try{
+       			            Thread.sleep(send_time - current_time);
+           			    } catch(InterruptedException e){
+               			    System.err.println("In message thread, message delay is interrupted.");
+                   			System.err.println(e);
+	                	}
+    		        }
+	    	         //send the message
+   		    	    try{
+       		    	    sendPacket(packet);
+	           		} catch(IOException e){
+    	           		System.err.println("error in send packet.");
+	    	            System.err.println(e);
+   		    	    }
+					if(i < 3)
+	       				Packet packet = data_center.getMessage();
+				}while(i++ < 4);
+			}
+			else{
+	            long current_time = System.currentTimeMillis();
+    	        long send_time = packet.getSendTime();
+        	    //check whether it's the time to send the message
+            	//if not, sleep for required length of time
+	            if(send_time > current_time){
+    	            try{
+        	            Thread.sleep(send_time - current_time);
+            	    } catch(InterruptedException e){
+                	    System.err.println("In message thread, message delay is interrupted.");
+                    	System.err.println(e);
+	                }
+    	        }
+	             //send the message
+    	        try{
+					setPacketVariableInDataCenter(packet);
+        	        sendPacket(packet);
+            	} catch(IOException e){
+                	System.err.println("error in send packet.");
+	                System.err.println(e);
+    	        }
+			}
         }
 	}
 
