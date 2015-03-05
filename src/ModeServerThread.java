@@ -80,7 +80,7 @@ public class ModeServerThread extends ServerThread{
 				Packet p = buildAckMsg(packet);
 	            p.setContent("Update Ack For -> \""+packet.getContent()+"\"");
 	    		p.setType(Packet.PacketType.Ack);
-	    		replica.insertMessage(p);
+	    		replica.insertAckMessage(p);
 				break;
             }
 			case Delete:
