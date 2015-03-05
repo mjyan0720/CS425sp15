@@ -92,6 +92,7 @@ public class ModeMsgThread implements Runnable{
 	                System.err.println(e);
     	        }
 			}
+			System.out.println("After sending message, new ack_num is " + data_center.lastMsgAckNum);
         }
 	}
 
@@ -109,6 +110,7 @@ public class ModeMsgThread implements Runnable{
 			case Get:
 				if(model == 1 || model == 2 || model == 3) ack_num = 1;
 				else if(model == 4) ack_num = 2;
+				else ack_num = 0;
 				break;
 			default:
 				ack_num = 0;
