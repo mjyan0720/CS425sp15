@@ -125,7 +125,7 @@ public class ModeServerThread extends ServerThread{
             {
                 //receive enough acks
                 //then start original routine -> check queue
-				replica.increaseAck(time);
+				replica.increaseAck(packet.getId());
 				break;
             }
             default:
