@@ -34,7 +34,7 @@ public class ModeClientThread extends ClientThread{
             System.err.println("Error in reading from input file: "+e);
         }
 
-        System.out.println(DataCenter.ReadFromFile);
+//        System.out.println(DataCenter.ReadFromFile);
         if(DataCenter.ReadFromFile==true)
             System.out.println("Starting Client thread. Read from File \"input"+data_center.getId()+"\"...");
         else
