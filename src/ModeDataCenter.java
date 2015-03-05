@@ -62,10 +62,10 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	public synchronized void increaseAck(long t){
 		synchronized (lockAckNum){
 			if(t != lastMsgTime){
-				System.out.println("Ignoring ACK time is " + t);
+				System.out.println("Ignoring ACK time is " + t + "; It's not the packet we expect");
 				return;
 			}
-			else if(t == lastMsgTime && ack < lastMsgAckNum){
+			else if(t == lastMsgTime){
 				ack++;
 				if(ack == lastMsgAckNum){
 					lastMsgAckNum = -1;

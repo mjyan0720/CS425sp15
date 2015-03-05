@@ -41,13 +41,13 @@ public class ModeMsgThread implements Runnable{
 	private void sendMessage(){
         Packet packet = data_center.getMessage();
         if( packet != null ){
-			int i=0;
 			if(packet.getModel() == 3 || packet.getModel() == 4){
+	            int i = 0;	
 				// send 4 messages
-				do{
+	    		setPacketVariableInDataCenter(packet);
+		    	do{
 		            long current_time = System.currentTimeMillis();
    			        long send_time = packet.getSendTime();
-					setPacketVariableInDataCenter(packet);
        		    	//check whether it's the time to send the message
 	           		//if not, sleep for required length of time
 		            if(send_time > current_time){
@@ -66,9 +66,11 @@ public class ModeMsgThread implements Runnable{
 	    	            System.err.println(e);
    		    	    }
 					
-					while((packet = data_center.getMessage()) == null);
+                    i += 1;
 
-				}while(i++ < DataCenter.TOTAL_NUM);
+					while((packet = data_center.getMessage()) == null && i<DataCenter.TOTAL_NUM);
+
+                }while(i < DataCenter.TOTAL_NUM);
 			}
 			else{
 	            long current_time = System.currentTimeMillis();
