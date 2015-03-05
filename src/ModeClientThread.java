@@ -106,7 +106,7 @@ public class ModeClientThread extends ClientThread{
                     System.out.println("Send the message using delay as " + delay + " Milliseconds");
                     data_center.insertMessage(packet);
                     printPacket(packet);
-                } else {
+                } else if(packet.getModel()==3 || packet.getModel()==4) {
                     TreeSet<Packet> packets = new TreeSet<Packet>(new delayComparator());
 
                     Random random = new Random();
@@ -127,6 +127,8 @@ public class ModeClientThread extends ClientThread{
                         data_center.insertMessage(iter.next());
                     }
 
+                } else{
+                    System.out.println("Invalid model number. Drop the packet.");
                 }
            }
         } catch(IOException e){
