@@ -163,8 +163,8 @@ public class ModeServerThread extends ServerThread{
         Packet p = new Packet(packet);
 		long current_time = System.currentTimeMillis();
         //use original packet's timestamp as id
-        p.setTimestamp(current_time);
         p.setId(packet.getTimestamp());
+        p.setTimestamp(current_time);
         if(packet.getModel()==1 || packet.getModel()==2){
             //No need to reset source and destination
         }else{

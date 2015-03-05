@@ -121,7 +121,6 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	@Override
 	public void startThreads(){
 		lastMsgAckNum = -2;
-        Thread client_thread = new Thread(new ModeClientThread(this));
         Thread server_threads[] = new Thread[TOTAL_NUM];
         for(int i=0; i<TOTAL_NUM; i++){
             if(i!=getId()){
@@ -135,8 +134,37 @@ public class ModeDataCenter extends KeyValueDataCenter{
         server_thread_listen_to_leader.start();
         Thread message_thread = new Thread(new ModeMsgThread(this));
         message_thread.start();
+        Thread client_thread = new Thread(new ModeClientThread(this));
         client_thread.start();
 	}
+
+	public static void main(String[] args) throws IOException {
+    	if (args.length < 1) {
+        	System.err.println("Usage: java DataCenter machineID(0,1,2,3) config_file");
+	        System.exit(1);
+    	}
+        //first parameter is ID
+		int index = Integer.parseInt(args[0]);
+        DataCenter datacenter = new DataCenter(index);
+        //second parameter is configuration file
+		try{
+			datacenter.readConfigFile(args[1]);
+		}
+		catch(Exception e){
+			e.printStackTrace(System.out);
+		}
+
+        //third parameter is optional, if provided
+        //non-zero means read from file
+        if(args[2]!=null && Integer.parseInt(args[2])!=0)//default read from terminal
+            DataCenter.ReadFromFile = true;
+        System.out.println("set up read from file "+args[2]+" "+DataCenter.ReadFromFile);
+		datacenter.buildConnection();
+        datacenter.startThreads();
+    }
+
+
+
 }
 
 
