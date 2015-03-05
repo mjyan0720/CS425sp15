@@ -145,7 +145,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
     	}
         //first parameter is ID
 		int index = Integer.parseInt(args[0]);
-        DataCenter datacenter = new ModeDataCenter(index);
+        ModeDataCenter datacenter = new ModeDataCenter(index);
         //second parameter is configuration file
 		try{
 			datacenter.readConfigFile(args[1]);
@@ -158,7 +158,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
         //non-zero means read from file
         if(args[2]!=null && Integer.parseInt(args[2])!=0)//default read from terminal
             DataCenter.ReadFromFile = true;
-        System.out.println("set up read from file "+args[2]+" "+DataCenter.ReadFromFile);
+//        System.out.println("set up read from file "+args[2]+" "+DataCenter.ReadFromFile);
 		datacenter.buildConnection();
         datacenter.startThreads();
     }
