@@ -145,7 +145,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
     	}
         //first parameter is ID
 		int index = Integer.parseInt(args[0]);
-        DataCenter datacenter = new DataCenter(index);
+        DataCenter datacenter = new ModeDataCenter(index);
         //second parameter is configuration file
 		try{
 			datacenter.readConfigFile(args[1]);

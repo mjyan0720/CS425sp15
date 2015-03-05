@@ -20,6 +20,7 @@ public class ModeClientThread extends ClientThread{
 
     public ModeClientThread(DataCenter data_center){
         super(data_center);
+        System.out.println("It's mode client thread");
     }
 
     @Override
@@ -37,7 +38,7 @@ public class ModeClientThread extends ClientThread{
         if(DataCenter.ReadFromFile==true)
             System.out.println("Starting Client thread. Read from File \"input"+data_center.getId()+"\"...");
         else
-            System.out.println("Starting Client thread. Read from Terminal...");
+            System.out.println("Starting Client thread. Read from Terminal... Here...");
 
         String command = null;
         try{
