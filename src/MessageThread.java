@@ -76,7 +76,8 @@ public class MessageThread implements Runnable{
             System.out.println("Send packet to myself. This case is not handled yet. Drop packet.");
             return;
         }
- */       //if the destination is valid, just send it
+ */     
+        //if the destination is valid, just send it
         obj_os[packet.getDestination()].writeObject(packet);
 
     }
