@@ -105,8 +105,8 @@ public class ModeServerThread extends ServerThread{
 	    		Content content = replica.get(key);
                 //create ack packet and insert to ack queue
 				Packet p = buildAckMsg(packet);
-                p.setContent("ACK " +p.getContent());
-				p.setType(Packet.PacketType.GetAck);
+   	            p.setContent("Get Ack For -> \""+packet.getContent()+"\"");
+   				p.setType(Packet.PacketType.GetAck);
 				p.setValueTimestamp(content);
 				p.setKey(key);
 				replica.insertAckMessage(p);
