@@ -105,6 +105,7 @@ public class ModeServerThread extends ServerThread{
 	    		Content content = replica.get(key);
                 //create ack packet and insert to ack queue
 				Packet p = buildAckMsg(packet);
+                p.setContent("ACK " +p.getContent());
 				p.setType(Packet.PacketType.GetAck);
 				p.setValueTimestamp(content);
 				p.setKey(key);
@@ -154,11 +155,14 @@ public class ModeServerThread extends ServerThread{
 	private void processGetAck(Packet p){
 		ModeDataCenter replica = (ModeDataCenter) data_center;
         if(p.getValueTimestamp()==null)
-    		System.out.println("Receiving get message: " + p.getKey() + "=>" 
+    		System.out.println("Receiving get ack message: " + p.getKey() + "=>" 
 			+ "is not in data center");
         else{
-    		System.out.println("Receiving get message: " + p.getKey() + "=>" 
-			+ p.getValueTimestamp().value + " Time stamp =>" + p.getValueTimestamp().timestamp);	
+            DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");
+            Date dateobj = new Date(p.getValueTimestamp().timestamp);
+
+    		System.out.println("Receiving get ack message: " + p.getKey() + "=>" 
+			+ p.getValueTimestamp().value + " Time stamp =>" + df.format(dateobj));	
 			Content t = p.getValueTimestamp();
 			Content old = replica.get(p.getKey());
 			if(old != null && old.timestamp < t.timestamp){

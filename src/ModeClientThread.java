@@ -94,8 +94,12 @@ public class ModeClientThread extends ClientThread{
                                 System.out.println("Get from local: "+packet.getKey()
                                     +"-> Doesn't exist");
                             } else{
+
+                                DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");
+                                Date dateobj = new Date(c.timestamp);
+
                                 System.out.println("Get from local: "+packet.getKey()
-                                    +"->"+c.value+"; Timestamp: "+c.timestamp);
+                                    +"->"+c.value+"; Timestamp: "+df.format(dateobj));
                             }
                             //skip the queue
                             continue;

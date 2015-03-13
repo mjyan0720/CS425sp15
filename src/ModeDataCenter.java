@@ -72,7 +72,7 @@ public class ModeDataCenter extends KeyValueDataCenter{
 					lastMsgAckNum = -1;
 					ack = 0;
 					lastMsgTime = -1;
-					System.out.println("Message Complete");
+					System.out.println("Operation Complete.");
 				}
 			}
 			else{
@@ -98,7 +98,10 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	public synchronized void insert(int key, int value, long time){
 		Content old = getValue(key);
 		if(old != null){
-			if(old.timestamp > time) return;
+			if(old.timestamp > time){
+                System.out.println("It's an old insert message, ignore.");
+                return;
+            }
 		}
 		insertPair(key, value,time);
 		System.out.println("Successful inserting key " + key);
@@ -116,7 +119,10 @@ public class ModeDataCenter extends KeyValueDataCenter{
 	public synchronized void update(int key, int value, long time){
 		Content old = getValue(key);
 		if(old != null){
-			if(old.timestamp > time) return;
+			if(old.timestamp > time){
+                System.out.println("It's an old update message, ignore.");
+                return;
+            }
 		}
 		updatePair(key, value, time);
 		DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");

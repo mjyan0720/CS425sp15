@@ -98,7 +98,7 @@ public class Packet implements Serializable{
         //check whether it's a send message packet or not
         if(content.length()>4){
             String cmd = content.substring(0, 4);
-            if(cmd.equals(new String("Send") )){
+            if(cmd.equalsIgnoreCase(new String("Send") )){
                 //expected format:
                 //Send xxxx to A
                 //4, ,?, 2, ,1
@@ -108,7 +108,7 @@ public class Packet implements Serializable{
                 if(this.destination >= DataCenter.TOTAL_NUM ||  this.destination < 0){
                     System.out.println("Invalid Destination!!");
                 }
-                this.message = content.substring(5, content.length()-5);
+                this.message = content.substring(5, content.length()-2);
                 return;
             }
         }
