@@ -4,6 +4,7 @@ import java.net.*;
 import java.text.*;
 
 public class ModeServerThread extends ServerThread{
+	public static List<Packet> getMsg = new ArrayList<Packet>();
 	public ModeServerThread(DataCenter data_center, int target){
 		super(data_center, target);
 	}
@@ -117,8 +118,8 @@ public class ModeServerThread extends ServerThread{
                 //wait for enough read packet return
                 //ignore the following
                 //and print out result
-				replica.increaseAck(packet.getId());
 				processGetAck(packet);	
+				replica.increaseAck(packet.getId());
 				break;
             }
 			case SearchAck:
@@ -161,8 +162,36 @@ public class ModeServerThread extends ServerThread{
             DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss.SSS");
             Date dateobj = new Date(p.getValueTimestamp().timestamp);
 
-    		System.out.println("Receiving get ack message: " + p.getKey() + "=>" 
-			+ p.getValueTimestamp().value + " Time stamp =>" + df.format(dateobj));	
+			int model = p.getModel();
+			if(model == 1 || model == 2){
+    			System.out.println("Result: " + p.getKey() + "=>" 
+				+ p.getValueTimestamp().value + " Time stamp =>" + df.format(dateobj));	
+			}
+			else if(model == 3 && !replica.messageComplete() && replica.getLastMessageTime() == p.getId()){
+    			System.out.println("Result of get " + p.getKey() + "=>" 
+				+ p.getValueTimestamp().value + " Time stamp =>" + df.format(dateobj));
+
+			}
+			else if(model == 4){
+				if(!replica.messageComplete()){
+					if(replica.getLastMessageTime() == p.getId())
+						getMsg.add(p);	
+				}
+				if(getMsg.size() == 2){
+					if(getMsg.get(0).getValueTimestamp().timestamp > getMsg.get(1).getValueTimestamp().timestamp){
+           				dateobj = new Date(getMsg.get(0).getValueTimestamp().timestamp);
+		    			System.out.println("Result of get: " + p.getKey() + "=>" 
+						+ p.getValueTimestamp().value + " Time stamp =>" + df.format(dateobj));	
+					}
+					else{
+           				dateobj = new Date(getMsg.get(1).getValueTimestamp().timestamp);
+		    			System.out.println("Result of get: " + p.getKey() + "=>" 
+						+ p.getValueTimestamp().value + " Time stamp =>" + df.format(dateobj));	
+					}
+					getMsg.clear();
+				}
+			}
+
 			Content t = p.getValueTimestamp();
 			Content old = replica.get(p.getKey());
 			if(old != null && old.timestamp < t.timestamp){
